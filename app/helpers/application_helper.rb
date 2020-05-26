@@ -5,7 +5,7 @@ module ApplicationHelper
       if page_name.empty?
         base_title
       else
-        fomat('%s | %s', page_name, base_title)
+        format('%s | %s', page_name, base_title)
       end
     end
 end
