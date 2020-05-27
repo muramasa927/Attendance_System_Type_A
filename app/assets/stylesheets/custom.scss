@@ -51,12 +51,15 @@ p {
 }
 
 // header
+.navbar {
+  background-color: #000;
+}
 
 #logo {
   float: left;
   margin-right: 10px;
   font-size: 1.7em;
-  color: #111;
+  color: #fff;
   text-transform: uppercase;
   letter-spacing: -1px;
   padding-top: 9px;
