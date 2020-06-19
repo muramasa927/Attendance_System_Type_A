@@ -4,6 +4,32 @@ class ApplicationController < ActionController::Base
   
   $days_of_the_week = %w{日 月 火 水 木 金 土}
   
+  # beforeフィルタ
+    
+  # ユーザーを取得する
+  def set_user
+    @user = User.find(params[:id])
+  end
+  
+  # ログイン済みのユーザーか確認
+  def logged_in_user
+    unless logged_in?
+      store_location
+      flash[:danger] = "ログインしてください"
+      redirect_to login_url
+    end
+  end
+  
+  # 現在ログインしているユーザーか確認
+  def correct_user
+    redirect_to(root_url) unless current_user?(@user)
+  end
+  
+  # 管理者権限保有者か判定
+  def admin_user
+    redirect_to root_url unless current_user.admin?
+  end
+  
   # ページ出力前に１ヶ月分のデータの存在を確認・セット
   def set_one_month
     @first_day = params[:date].nil? ?
