@@ -27,4 +27,34 @@ class AttendancesController < ApplicationController
   def edit_one_month
   end
   
+  def update_one_month
+    # トランザクション開始
+    ActiveRecord::Base.transaction do
+      attendances_params.each do |id, item|
+        attendance = Attendance.find(id)
+        attendance.update_attributes!(item)
+      end
+    end
+    flash[:success] = "１ヶ月分の勤怠情報を更新しました。"
+    redirect_to user_url(date: params[:date])
+  # トランジェクションによるエラーの分岐です
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました"
+    redirect_to attendances_edit_one_month_user_url(date: params[:date])
+  end
+  
+  private
+  
+  def attendances_params
+    params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
+  end
+  
+  def admin_or_correct_user
+    @user = User.find(params[:user_id]) if @user.blank?
+    unless current_user?(@user) || current_user.admin?
+      flash[:danger] = "権限がありません"
+      redirect_to(root_url)
+    end
+  end
+  
 end
