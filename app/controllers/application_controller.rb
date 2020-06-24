@@ -20,6 +20,12 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def new_login_user
+    if logged_in?
+      flash[:danger] = "既にログインしています"
+      redirect_to root_url
+    end
+  end
   # 現在ログインしているユーザーか確認
   def correct_user
     redirect_to(root_url) unless current_user?(@user)
@@ -33,7 +39,7 @@ class ApplicationController < ActionController::Base
   # ページ出力前に１ヶ月分のデータの存在を確認・セット
   def set_one_month
     @first_day = params[:date].nil? ?
-    Date.current.beginning_of_month : params[:date].to_date
+                 Date.current.beginning_of_month : params[:date].to_date
     @last_day = @first_day.end_of_month
     # 対象の月の日数を代入
     one_month = [*@first_day..@last_day]
@@ -55,4 +61,27 @@ class ApplicationController < ActionController::Base
     flash[:danger] = "ページ情報の更新に失敗しました。再アクセスしてください。"
     redirect_to root_url
   end
+  
+  # 1週間表示
+  def set_one_week
+    @week_first_day = params[:date].nil? ?
+                      Date.current.biginning_of_week : params[:date].to_date
+    @week_last_day = @week_first_day.end_of_week
+    one_week = [*@week_first_day..@week_last_day]
+    @attendances = @user.attendances.where(worked_on: @week_first_day..@week_last_day).order(:worked_on)
+    
+    unless one_week.count == @attendances.count
+      ActiveRecord::Base.transaction do
+        # 1週間分の勤怠データを生成
+        one_week { |day| @user.attendances.create!(worked_on: day) }
+      end
+      @attendances = @user.attendances.where(worked_on: @week_first_day..@week_last_day).order(:worked_on)
+    end
+    
+  # トランザクションエラーの分岐
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = "ページ情報の更新に失敗しました。再アクセスしてください。"
+    redirect_to root_url
+  end
+  
 end
