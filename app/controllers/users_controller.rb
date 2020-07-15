@@ -10,7 +10,11 @@ class UsersController < ApplicationController
   end
   
   def show
-    @worked_sum = @attendances.where.not(started_at: nil).count
+    if current_user?(@user)
+      @worked_sum = @attendances.where.not(started_at: nil).count
+    else
+      redirect_to current_user
+    end
   end
   
   def new
@@ -48,10 +52,6 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   
-  def edit_time_info
-    
-  end
-  
   def edit_basic_info
   
   end
@@ -70,7 +70,12 @@ class UsersController < ApplicationController
   end
   
   def update_time_info
-    
+    @users = User.all
+    @users.each do | user |
+      user.update_attributes(time_info_params)
+    end
+    flash[:success] = "ユーザーの基本情報を更新しました"
+    redirect_to users_url
   end
   
   # プライベート
@@ -82,6 +87,10 @@ class UsersController < ApplicationController
     
     def basic_info_params
       params.require(:user).permit(:department,:basic_time, :work_time)
+    end
+    
+    def time_info_params
+      params.require(:user).permit(:basic_time, :work_time)
     end
     
 end

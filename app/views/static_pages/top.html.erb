@@ -3,8 +3,9 @@
   <h1>勤怠管理システム</h1>
   <p>このアプリケーションでは、登録されたユーザーの勤怠情報を閲覧・登録・編集することができます。</p>
   <% if logged_in? %>
-    <%= link_to "ユーザー登録", signup_path, class: "btn btn-lg btn-primary", disabled: true %>
+    <%= link_to "ログイン", login_path, class: "btn btn-lg btn-primary", disabled: true %>
   <% else %>
-    <%= link_to "ユーザー登録", signup_path, class: "btn btn-lg btn-primary" %>
+    <%= link_to "ログイン", login_path, class: "btn btn-lg btn-primary" %>
   <% end %>
+  <p>アカウント作成は<%= link_to "こちら", signup_path %></p>
 </div>

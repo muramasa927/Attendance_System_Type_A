@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#destroy'
       
   # ユーザーの基本時間情報の一括更新機能
+  
   get 'users/edit_time_info'
   patch 'users/update_time_info'
       
