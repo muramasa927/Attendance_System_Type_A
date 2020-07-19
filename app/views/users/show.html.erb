@@ -41,7 +41,14 @@
       <% @attendances.each do |day| %>
         <tr>
           <td><%= l(day.worked_on, format: :short) %></td>
-          <td><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <% case $days_of_the_week[day.worked_on.wday] %>
+          <% when "日" then %>
+            <td class = "wday_sunday" ><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <% when "土" then %>
+            <td class = "wday_saturday"><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <% else %>
+            <td><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <% end %>
           <td>
             <% if btn_text = attendance_state(day) %>
               <%= link_to "#{btn_text}登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-success btn-attendance" %>

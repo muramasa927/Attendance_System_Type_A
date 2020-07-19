@@ -35,6 +35,10 @@ class ApplicationController < ActionController::Base
   def admin_user
     redirect_to root_url unless current_user.admin?
   end
+  # 他のユーザーへのアクセスを不可
+  def other_user
+    redirect_to root_url unless User.find(params[:id]) == current_user || current_user.admin?
+  end
   
   # ページ出力前に１ヶ月分のデータの存在を確認・セット
   def set_one_month

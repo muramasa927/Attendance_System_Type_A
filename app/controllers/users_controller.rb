@@ -5,16 +5,13 @@ class UsersController < ApplicationController
   before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info]
   before_action :set_one_month, only: :show
   before_action :new_login_user, only: :new
+  before_action :other_user, only: :show
   def index
     @users = User.paginate(page: params[:page])
   end
   
   def show
-    if current_user?(@user)
-      @worked_sum = @attendances.where.not(started_at: nil).count
-    else
-      redirect_to current_user
-    end
+    @worked_sum = @attendances.where.not(started_at: nil).count
   end
   
   def new
