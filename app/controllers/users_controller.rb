@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   before_action :new_login_user, only: :new
   before_action :other_user, only: :show
   def index
-    @users = User.paginate(page: params[:page])
+    @users = User.where(actived: true).paginate(page: params[:page]).search(params[:search])
   end
   
   def show

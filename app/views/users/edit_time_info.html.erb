@@ -7,10 +7,10 @@
     <div class = "col-md-6 col-md-offset-3">
       <%= form_with(model: @users, url: users_update_time_info_path(@users), local: true, method: :patch) do |f| %>
         
-        <%= f.label :basic_time, class: "label-#{yield(:class_text)}" %>
+        <%= f.label t('.basic_time'), class: "label-#{yield(:class_text)}" %>
         <%= f.time_field :basic_time, class: "form-control" %>
         
-        <%= f.label :work_time, class: "label-#{yield(:class_text)}" %>
+        <%= f.label t('.work_time'), class: "label-#{yield(:class_text)}" %>
         <%= f.time_field :work_time, class: "form-control" %>
         
         <div class = "center">

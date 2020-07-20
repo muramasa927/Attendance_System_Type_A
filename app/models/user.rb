@@ -49,4 +49,8 @@ class User < ApplicationRecord
   def forget
     update_attribute(:remember_digest, nil)
   end
+  
+  def self.search
+    
+  end
 end
