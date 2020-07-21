@@ -1,14 +1,19 @@
 <% provide(:title, 'All Users') %>
+<% provide(:class_text, 'search-control') %>
+<% provide(:btn_text, "検索") %>
 <h1>ユーザー一覧</h1>
+
+
+
+<!--検索機能-->
+<p>ユーザー検索</p>
+<%= form_with url: users_path, method: :get, local: true do |f| %>
+  <%= f.text_field :search, class: "search-control" %>
+  <%= f.submit "検索", class: "btn btn-success btn-#{yield(:class_text)}" %>
+<% end %>
 
 <div class = "col-md-10 col-md-offset-1">
   <%= will_paginate %>
-  <!--検索機能-->
-  <p>usersearch</p>
-  <%= form_with(users_path, method: 'get') do |s|%>
-    <%= s.text_field :search, class: "search-control" %>
-    <%= s.submit yield(:btn_text), name: nil, class: "btn btn-success" %>
-  <% end %>
   <table class = "table table-condensed table-hover" id = "table-users" >
     <thead>
       <tr>
@@ -38,7 +43,7 @@
         <% end %>
         <td class = "center">
           <% if current_user.admin? && !current_user?(user) %>
-            <%= link_to "基本情報編集", edit_basic_info_user_path(user), remote: true, class: "btn btn-success" %>
+            <%= link_to "基本情報編集", edit_basic_info_user_path(user), remote: true, class: "btn btn-success" %>
             <%= link_to "削除", user, method: :delete,
                 data: {confirm: "削除してもよろしいですか?"},
                 class: "btn btn-danger" %>
