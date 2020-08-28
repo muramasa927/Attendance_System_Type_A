@@ -13,8 +13,14 @@
       <td>名前:<%= @user.name %></td>
       <td>出勤日数:<%= @worked_sum %>日</td>
       <td>月末日:<%= l(@last_day, format: :short) %></td>
-    </tr>
+   </tr>
   </table>
+</div>
+
+<div class = "container">
+  <p><%= link_to "【所属長承認申請のお知らせ】" %></p>
+  <p><%= link_to "【勤怠変更申請のお知らせ】" %></p>
+  <p><%= link_to "【残業申請のお知らせ】" %></p>
 </div>
 
 <div class = "btn-users-show">
