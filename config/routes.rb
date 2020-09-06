@@ -22,7 +22,9 @@ Rails.application.routes.draw do
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
     end
-    resources :attendances, only: :update
+    resources :attendances, only: :update 
+    get 'attendances/:id/edit_overtime_application', to: 'attendances#edit_overtime_application', as: :attendances_edit_overtime_application
+    patch 'attendances/:id/update_overtime_application', to: 'attendances#update_overtime_application', as: :attendances_update_overtime_application
   end
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

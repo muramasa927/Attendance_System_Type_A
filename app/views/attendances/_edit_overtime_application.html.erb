@@ -1,0 +1,22 @@
+
+<% provide(:class_text, 'basic-info') %>
+<% provide(:button_text, '更新') %>
+
+<div class = "modal-dialog modal-lg modal-dialog-center">
+	<div class = "modal-content">
+		<div class = "modal-header">
+			<button type = "button" class = "close" data-dismiss = "modal" aria-label = "Close">
+				<span aria-hidden = "true">＆times;</span>
+			</button>
+			<h1 class = "modal-title">残業申請</h1>
+		</div>
+	</div>
+	<div class = "modal-body">
+		<div class = "col-md-6 col-md-ofset-3">
+			<%# form_with(model: @attendance, url: user_attendances_update_overtime_application_path(@attendance),local: true, method: :patch) do |f| %>
+				<%# render 'shared/error_messages', object: @attendance %>
+			<%# end %>
+			
+		</div>
+	</div>
+</div>
