@@ -16,6 +16,30 @@
 			<div class = "col-md-6 col-md-ofset-3">
 				<%= form_with(model: @attendance, url: user_attendances_update_overtime_application_path(@user, @attendance), local: true, method: :patch) do |f| %>
 					<%= render 'shared/error_messages', object: @attendance %>
+
+					<table class = "table table-bordered table-condensed table-hover">
+						<thead>
+							<tr>
+								<th>日付</th>
+								<th>曜日</th>
+								<th>終了予定時間</th>
+								<th>翌日</th>
+								<th>業務処理内容</th>
+								<th>上司確認</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr>
+								<td><%= l(@attendance.worked_on, format: :short) %></td>
+								<td>f.<%=  %></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
 				<% end %>
 			</div>
 		</div>
