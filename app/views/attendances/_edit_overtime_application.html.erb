@@ -32,10 +32,10 @@
 						<tbody>
 							<tr>
 								<td><%= l(@attendance.worked_on, format: :short) %></td>
-								<td>f.<%=  %></td>
+								<td><%= $days_of_the_week[@attendance.worked_on.wday] %></td>
+								<td><%= f.time_field :finish_overtime %></td>
 								<td></td>
-								<td></td>
-								<td></td>
+								<td>f.text_field :</td>
 								<td></td>
 							</tr>
 						</tbody>
