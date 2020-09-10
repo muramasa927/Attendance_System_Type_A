@@ -51,11 +51,20 @@ class AttendancesController < ApplicationController
   end
 
   def update_overtime_application
+    @attendance = Attendance.find(params[:id])
+    @attendance.update_attributes(overtime_application_params)
+    flash[:success] = "ユーザーの基本情報を更新しました"
+    redirect_to(root_url)
   end
+
   private
   
   def attendances_params
     params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
+  end
+
+  def overtime_application_params
+    params.require(:attendance).permit(:finish_overtime, :next_day, :business_processing_content, :receive_superior_id, :apply_user_id)
   end
   
   def admin_or_correct_user
