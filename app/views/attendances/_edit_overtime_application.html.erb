@@ -34,11 +34,12 @@
 								<tr>
 									<td><%= l(@attendance.worked_on, format: :short) %></td>
 									<td><%= $days_of_the_week[@attendance.worked_on.wday] %></td>
-									<td><%= f.time_field :finish_overtime %></td>
+									<td><%= f.time_select :finish_overtime, default: @attendance.worked_on %></td>
 									<td><%= f.check_box :next_day, {}, true, false %></td>
 									<td><%= f.text_field :business_processing_content %></td>
 									<td><%= f.collection_select :receive_superior_id, @superiors, :id, :name, :include_blank => true %></td>
 									<%= f.hidden_field :apply_user_id, :value => @user.id %>
+									<%= f.hidden_field :application_information, :value => 1 %>
 								</tr>
 							</tbody>
 						</table>

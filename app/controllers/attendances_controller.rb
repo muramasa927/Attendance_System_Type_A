@@ -54,7 +54,7 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
     @attendance.update_attributes(overtime_application_params)
     flash[:success] = "ユーザーの基本情報を更新しました"
-    redirect_to(root_url)
+    redirect_to(current_user)
   end
 
   private
@@ -64,7 +64,7 @@ class AttendancesController < ApplicationController
   end
 
   def overtime_application_params
-    params.require(:attendance).permit(:finish_overtime, :next_day, :business_processing_content, :receive_superior_id, :apply_user_id)
+    params.require(:attendance).permit(:finish_overtime, :next_day, :business_processing_content, :receive_superior_id, :apply_user_id, :application_information)
   end
   
   def admin_or_correct_user
