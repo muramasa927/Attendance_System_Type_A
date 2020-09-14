@@ -17,10 +17,15 @@
   </table>
 </div>
 
+<%# 上司が各種申請を確認する %>
 <div class = "container">
-  <p><%= link_to "【所属長承認申請のお知らせ】" %></p>
-  <p><%= link_to "【勤怠変更申請のお知らせ】" %></p>
-  <p><%= link_to "【残業申請のお知らせ】" %></p>
+  <% if @user.superior? %>
+    <p><%= link_to "【所属長承認申請のお知らせ】" %></p>
+    <p><%= link_to "【勤怠変更申請のお知らせ】" %></p>
+    <p>
+      <%= link_to "【残業申請のお知らせ】", user_attendances_edit_overtime_confirmation_path %>
+    </p>
+  <% end %>
 </div>
 
 <div class = "btn-users-show">
@@ -80,7 +85,7 @@
               <%= link_to "#{btn_text}登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-success btn-attendance" %>
             <% end %>
           </td>
-          <td><%= l(day.started_at.floor_to(15.minutes), format: :time) if day.started_at.present? %></td>
+          <td><%= l(day.started_at.floor_to(15.minutes), format: :hour) if day.started_at.present? %></td>
           <td><%= l(day.started_at.floor_to(15.minutes), format: :minute) if day.started_at.present? %></td>
           <td><%= l(day.finished_at.floor_to(15.minutes), format: :hour) if day.finished_at.present? %></td>
           <td><%= l(day.finished_at.floor_to(15.minutes), format: :minute) if day.finished_at.present? %></td>
@@ -90,12 +95,21 @@
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
           </td>
-          <td></td>
           <td><%= day.note %></td>
-          <td><%= day.finish_overtime %></td>
+          <td><%= l(day.finish_overtime, format: :hour)if day.finish_overtime.present? %></td>
+          <td><%= l(day.finish_overtime, format: :minute)if day.finish_overtime.present? %></td>
           <td></td>
           <td><%= day.business_processing_content %></td>
-          <td><%= day.application_information %></td>
+            <% case day.application_information %>
+            <% when 0 %>
+              <td></td>
+            <% when 1 %>
+             <td>申請中</td>
+            <% when 2 %>
+              <td>承認</td>
+            <% when 3 %>
+              <td>否認</td>
+            <% end %>
         </tr>
       <% end %>
     </tbody>
