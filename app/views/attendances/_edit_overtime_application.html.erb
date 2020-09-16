@@ -13,8 +13,9 @@
 		<div class = "modal-body">
 			<div class = "row">
 				<div class = "col-md-12">
-					<%= form_with(model: @attendance, url: user_attendances_update_overtime_application_path(@user, @attendance), local: true, method: :patch) do |f| %>
-						<h1 class = "modal-title">残業申請</h1>
+					<h1 class = "modal-title">残業申請</h1>
+					<%= form_with(model: @attendance,
+							url: user_attendances_update_overtime_application_path(@user, @attendance), local: true, method: :patch) do |f| %>
 						<%= f.label :apply_user_id, @user.name %>
 						<%= render 'shared/error_messages', object: @attendance %>
 

@@ -57,6 +57,15 @@ class AttendancesController < ApplicationController
     redirect_to(current_user)
   end
 
+  def edit_overtime_confirmation
+    @user = User.find(params[:user_id])
+    @applying_attendance = Attendance.where(application_information: 1)
+  end
+
+  def update_overtime_confirmation
+
+  end
+
   private
   
   def attendances_params

@@ -23,7 +23,7 @@
     <p><%= link_to "【所属長承認申請のお知らせ】" %></p>
     <p><%= link_to "【勤怠変更申請のお知らせ】" %></p>
     <p>
-      <%= link_to "【残業申請のお知らせ】", user_attendances_edit_overtime_confirmation_path %>
+      <%= link_to "【残業申請のお知らせ】", user_attendances_edit_overtime_confirmation_path(@user), remote: true %>
     </p>
   <% end %>
 </div>
@@ -133,4 +133,5 @@
 </div>
 
 <%# モーダルウインドウ表示 %>
-<div id = "edit-overtime-application" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true">
+<div id = "edit-overtime-application" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
+<div id = "edit-overtime-confirmation" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
