@@ -59,7 +59,7 @@ class AttendancesController < ApplicationController
 
   def edit_overtime_confirmation
     @user = User.find(params[:user_id])
-    @applying_attendance = Attendance.where(application_information: 1)
+    @applying_attendances = Attendance.where(application_information: 1).where.not(receive_superior_id: @user.id)
   end
 
   def update_overtime_confirmation
