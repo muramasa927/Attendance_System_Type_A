@@ -73,7 +73,7 @@ class AttendancesController < ApplicationController
   end
 
   def overtime_application_params
-    params.require(:attendance).permit(:finish_overtime, :next_day, :business_processing_content, :receive_superior_id, :apply_user_id, :application_information)
+    params.require(:user).permit(attendance: [:finish_overtime, :next_day, :business_processing_content, :receive_superior_id, :apply_user_id, :application_information])[:attendance]
   end
   
   def admin_or_correct_user
