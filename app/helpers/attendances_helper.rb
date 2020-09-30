@@ -13,4 +13,13 @@ module AttendancesHelper
     format("%.2f", (((finish - start) / 60) / 60))
   end
 
+  def showing_overtime_user(user,superior)
+    # 記述調べる
+    if user.attendances.where(receive_superior_id: superior).any?
+      true
+    else
+      false
+    end
+  end
+
 end

@@ -24,6 +24,9 @@
     <p><%= link_to "【勤怠変更申請のお知らせ】" %></p>
     <p>
       <%= link_to "【残業申請のお知らせ】", user_attendances_edit_overtime_confirmation_path(@user), remote: true %>
+      <% if @apply_attendances.present? %>
+        <span><%= "[#{@apply_attendances.count}件のお知らせがあります]" %></span>
+      <% end %>
     </p>
   <% end %>
 </div>
@@ -83,7 +86,7 @@
           <td>
           <% if btn_text = attendance_state(day) %>
               <%= link_to "#{btn_text}登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-success btn-attendance" %>
-            <% end %>
+          <% end %>
           </td>
           <td><%= l(day.started_at.floor_to(15.minutes), format: :hour) if day.started_at.present? %></td>
           <td><%= l(day.started_at.floor_to(15.minutes), format: :minute) if day.started_at.present? %></td>
@@ -104,11 +107,11 @@
             <% when 0 %>
               <td></td>
             <% when 1 %>
-             <td>申請中</td>
+             <td><%= applying_superior(day) %>へ申請中です</td>
             <% when 2 %>
-              <td>承認</td>
+              <td><%= applying_superior(day) %>が承認しました</td>
             <% when 3 %>
-              <td>否認</td>
+              <td><%= applying_superior(day) %>が否認しました</td>
             <% end %>
         </tr>
       <% end %>

@@ -51,19 +51,23 @@ class AttendancesController < ApplicationController
   end
 
   def update_overtime_application
+    apply_overtime_user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
     @attendance.update_attributes(overtime_application_params)
+    apply_overtime_user.applying_overtime = @attendance.receive_superior_id
+    apply_overtime_user.update_attributes(apply_overtime_user_params)
     flash[:success] = "ユーザーの基本情報を更新しました"
     redirect_to(current_user)
   end
 
   def edit_overtime_confirmation
     @user = User.find(params[:user_id])
-    @applying_attendances = Attendance.where(application_information: 1).where.not(receive_superior_id: @user.id)
+    @overtime_users = User.where(applying_overtime: true)
+    @applying_attendances = Attendance.where(application_information: 1).where(receive_superior_id: @user.id)
   end
 
   def update_overtime_confirmation
-
+    debugger
   end
 
   private
@@ -74,6 +78,10 @@ class AttendancesController < ApplicationController
 
   def overtime_application_params
     params.require(:user).permit(attendance: [:finish_overtime, :next_day, :business_processing_content, :receive_superior_id, :apply_user_id, :application_information])[:attendance]
+  end
+
+  def apply_overtime_user_params
+    params.require(:user).permit(:applying_overtime)
   end
   
   def admin_or_correct_user

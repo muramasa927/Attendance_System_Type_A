@@ -5,4 +5,7 @@ module UsersHelper
     format("%.2f", ((time.hour * 60) + time.min) / 60.0)
   end
   
+  def applying_superior(day)
+    @superiors.find(day.receive_superior_id).name
+  end
 end
