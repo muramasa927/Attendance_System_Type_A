@@ -14,48 +14,46 @@
 			<div class = "row">
 				<div class = "col-md-12">
 					<h1 class = "modal-title">残業申請</h1>
-					<%= form_with(model: @user, 
-							url: user_attendances_update_overtime_application_path(@user, @attendance), local: true, method: :patch) do |f| %>
-							<%= f.fields_for @attendance do |attendance| %>
-								<%= attendance.label :apply_user_id, @user.name %>
-								<%= render 'shared/error_messages', object: @attendance %>
+					<%= form_with(model: @user, url: user_attendances_update_overtime_application_path(@user, @attendance), local: true, method: :patch) do |f| %>
+						<%= f.fields_for @attendance do |attendance| %>
+							<%= attendance.label :apply_user_id, @user.name %>
+							<%= render 'shared/error_messages', object: @attendance %>
 
-								<table class = "table table-bordered table-sm table-hover">
-									<thead>
-										<tr>
-											<th>日付</th>
-											<th>曜日</th>
-											<th>終了予定時間</th>
-											<th>翌日</th>
-											<th>業務処理内容</th>
-											<th>上司確認</th>
-										</tr>
-									</thead>
+							<table class = "table table-bordered table-sm table-hover">
+								<thead>
+									<tr>
+										<th>日付</th>
+										<th>曜日</th>
+										<th>終了予定時間</th>
+										<th>翌日</th>
+										<th>業務処理内容</th>
+										<th>上司確認</th>
+									</tr>
+								</thead>
 
-									<tbody>
-										<tr>
-											<td><%= l(@attendance.worked_on, format: :short) %></td>
-											<td><%= $days_of_the_week[@attendance.worked_on.wday] %></td>
-											<td><%= attendance.time_select :finish_overtime, default: @attendance.worked_on %></td>
-											<td><%= attendance.check_box :next_day, {}, true, false %></td>
-											<td><%= attendance.text_field :business_processing_content %></td>
-											<td><%= attendance.collection_select :receive_superior_id, @superiors, :id, :name, :include_blank => true %></td>
-											<%= attendance.hidden_field :apply_user_id, :value => @user.id %>
-											<%= attendance.hidden_field :application_information, :value => 1 %>
-											<%= f.hidden_field :applying_overtime, :value => true %>
-										</tr>
-									</tbody>
-								</table>
-								<div class = "center">
-									<%= f.submit "更新", class: "btn btn-primary" %>
-									<button type = "button" class = "btn btn-default" data-dismiss = "modal">
-										キャンセル
-									</button>
-								</div>
-							<% end %>
-						</div>
-					<% end %>
-				</div>
+								<tbody>
+									<tr>
+										<td><%= l(@attendance.worked_on, format: :short) %></td>
+										<td><%= $days_of_the_week[@attendance.worked_on.wday] %></td>
+										<td><%= attendance.time_select :finish_overtime, default: @attendance.worked_on %></td>
+										<td><%= attendance.check_box :next_day, {}, true, false %></td>
+										<td><%= attendance.text_field :business_processing_content %></td>
+										<td><%= attendance.collection_select :receive_superior_id, @superiors, :id, :name, :include_blank => true %></td>
+										<%= attendance.hidden_field :apply_user_id, :value => @user.id %>
+										<%= attendance.hidden_field :application_information, :value => 1 %>
+										<%= f.hidden_field :applying_overtime, :value => true %>
+									</tr>
+								</tbody>
+							</table>
+							<div class = "center">
+								<%= f.submit "更新", class: "btn btn-primary" %>
+								<button type = "button" class = "btn btn-default" data-dismiss = "modal">
+									キャンセル
+								</button>
+							</div>
+						<% end %>
+					</div>
+				<% end %>
 			</div>
 		</div>
 	</div>

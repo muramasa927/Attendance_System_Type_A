@@ -11,49 +11,52 @@
       <div class = "row">
         <div class = "col-md-12">
           <h1>残業承認画面</h1>
-            <%= form_with(model: @user, url: user_attendances_update_overtime_confirmation_path(@user), local: true, method: :patch) do |f| %>
-              <% @overtime_users.each do |apply_user| %>
-                <% if showing_overtime_user(apply_user, @user) %>
-                  <div><%= apply_user.name %>の残業申請</div>
-                  <table class = "table table-bordered table-sm table-hover">
-                    <thead>
-                      <tr>
-                        <th>日付</th>
-                        <th>曜日</th>
-                        <th>終了予定時間</th>
-                        <th>指定勤務終了時間</th>
-                        <th>時間外時間</th>
-                        <th>業務処理内容</th>
-                        <th>指示者確認</th>
-                        <th>変更</th>
-                        <th>勤怠を確認する<th>
-                      </tr>
-                    </thead>
-                    <% @applying_attendances.each do | attendance | %>
-                      <% if apply_user.id == attendance.apply_user_id %>
+          <%= form_with(model: @user, url: attendances_update_overtime_confirmation_path, local: true, method: :patch) do |f| %>
+            <% @overtime_users.each do |apply_user| %>
+              <% if showing_overtime_user(apply_user, @user) %>
+                <div><%= apply_user.name %>の残業申請</div>
+                <table class = "table table-bordered table-sm table-hover">
+                  <thead>
+                    <tr>
+                      <th>日付</th>
+                      <th>曜日</th>
+                      <th>終了予定時間</th>
+                      <th>指定勤務終了時間</th>
+                      <th>時間外時間</th>
+                      <th>業務処理内容</th>
+                      <th>指示者確認</th>
+                      <th>変更</th>
+                      <th>勤怠を確認する<th>
+                    </tr>
+                  </thead>
+                  <% @applying_attendances.each do | apply_attendance | %>
+                    <%= f.fields_for "applying_attendances[]", apply_attendance do | attendance | %>
+                      <% if apply_user.id == apply_attendance.apply_user_id %>
                         <tbody>
-                          <td><%= attendance.worked_on %></td>
-                          <td><%= $days_of_the_week[attendance.worked_on.wday] %></td>
-                          <td><%= attendance.finish_overtime %></td>
-                          <td><%# 指定勤務時間 %></td>
-                          <td><%# 時間外時間 %></td>
-                          <td><%= attendance.business_processing_content %></td>
-                          <td><%= f.select :application_information,[["申請中", 1], ["承認", 2], ["否認", 3]] %></td>
-                          <td><%= f.check_box :change_information, {}, true, false %></td>
+                          <td><%= apply_attendance.worked_on %></td>
+                          <td><%= $days_of_the_week[apply_attendance.worked_on.wday] %></td>
+                          <td><%= apply_attendance.finish_overtime %></td>
                           <td></td>
-                        </tbody> 
-                      <% end %> 
-                    <% end %>  
-                  </table>
-                <% end %>
+                          <td></td>
+                          <td><%= apply_attendance.business_processing_content %></td>
+                          <td><%= attendance.select :application_information,[["申請中", 1], ["承認", 2], ["否認", 3]] %></td>
+                          <td><%= attendance.check_box :change_information, {}, true, false %></td>
+                          <td></td>
+                          <%= f.hidden_field :applying_overtime, :value => false %>
+                        </tbody>
+                      <% end %>
+                    <% end %> 
+                  <% end %>    
+                </table>
               <% end %>
-              <div class = "center">
+            <% end %>
+            <div class = "center">
               <%= f.submit "更新", class: "btn btn-primary" %>
               <button type = "button" class = "btn btn-default" data-dismiss = "modal">
                 キャンセル
               </button>
-            <% end %>
-          </div>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

@@ -67,7 +67,20 @@ class AttendancesController < ApplicationController
   end
 
   def update_overtime_confirmation
-    debugger
+    ActiveRecord::Base.transaction do
+      debugger
+      overtime_confirmation_params.each do |id, item|
+        attendance = Attendance.find(id)
+        debugger
+        attendance.update_attributes!(item)
+      end
+    end
+    flash[:success] = "残業の承認を行いました"
+    redirect_to root_url
+  # トランジェクションによるエラーの分岐です
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = TRANSACTION_ERROR_MSG
+    redirect_to root_url
   end
 
   private
@@ -84,6 +97,9 @@ class AttendancesController < ApplicationController
     params.require(:user).permit(:applying_overtime)
   end
   
+  def overtime_confirmation_params
+    params.require(:user).permit(attendance: [:change_information,:application_information,])
+  end
   def admin_or_correct_user
     @user = User.find(params[:user_id]) if @user.blank?
     unless current_user?(@user) || current_user.admin?
