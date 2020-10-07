@@ -51,10 +51,11 @@ class AttendancesController < ApplicationController
   end
 
   def update_overtime_application
+    #application_informationが２から更新されないバグを考える
     apply_overtime_user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
     @attendance.update_attributes(overtime_application_params)
-    apply_overtime_user.applying_overtime = @attendance.receive_superior_id
+    apply_overtime_user.applying_overtime = true
     apply_overtime_user.update_attributes(apply_overtime_user_params)
     flash[:success] = "ユーザーの基本情報を更新しました"
     redirect_to(current_user)
@@ -67,15 +68,17 @@ class AttendancesController < ApplicationController
   end
 
   def update_overtime_confirmation
+    #userも更新する。ユーザー側では申請中のままなのを改修する
     ActiveRecord::Base.transaction do
-      debugger
       overtime_confirmation_params.each do |id, item|
         attendance = Attendance.find(id)
-        debugger
+        user = User.find(attendance.user_id)
+        user.applying_overtime = false
+        user.update_attributes!(apply_overtime_user_params)
         attendance.update_attributes!(item)
       end
     end
-    flash[:success] = "残業の承認を行いました"
+    flash[:success] = "残業申請を更新しました"
     redirect_to root_url
   # トランジェクションによるエラーの分岐です
   rescue ActiveRecord::RecordInvalid
@@ -98,8 +101,9 @@ class AttendancesController < ApplicationController
   end
   
   def overtime_confirmation_params
-    params.require(:user).permit(attendance: [:change_information,:application_information,])
+    params.require(:user).permit(:applying_overtime, applying_attendances:[:change_information,:application_information])[:applying_attendances]
   end
+
   def admin_or_correct_user
     @user = User.find(params[:user_id]) if @user.blank?
     unless current_user?(@user) || current_user.admin?

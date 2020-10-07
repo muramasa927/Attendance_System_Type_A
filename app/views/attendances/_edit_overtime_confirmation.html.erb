@@ -43,6 +43,7 @@
                           <td><%= attendance.check_box :change_information, {}, true, false %></td>
                           <td></td>
                           <%= f.hidden_field :applying_overtime, :value => false %>
+                          <%= f.hidden_field :user_id, :value => apply_attendance.user_id %>
                         </tbody>
                       <% end %>
                     <% end %> 

@@ -23,9 +23,12 @@
     <p><%= link_to "【所属長承認申請のお知らせ】" %></p>
     <p><%= link_to "【勤怠変更申請のお知らせ】" %></p>
     <p>
-      <%= link_to "【残業申請のお知らせ】", user_attendances_edit_overtime_confirmation_path(@user), remote: true %>
+      
       <% if @apply_attendances.present? %>
+        <%= link_to "【残業申請のお知らせ】", user_attendances_edit_overtime_confirmation_path(@user), remote: true %>
         <span><%= "[#{@apply_attendances.count}件のお知らせがあります]" %></span>
+      <% else %>
+        <div>【残業申請のお知らせ】</div>
       <% end %>
     </p>
   <% end %>
