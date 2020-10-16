@@ -51,7 +51,6 @@ class AttendancesController < ApplicationController
   end
 
   def update_overtime_application
-    #application_informationが２から更新されないバグを考える
     apply_overtime_user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
     @attendance.update_attributes(overtime_application_params)
@@ -62,13 +61,14 @@ class AttendancesController < ApplicationController
   end
 
   def edit_overtime_confirmation
+    #申請承認の変更
     @user = User.find(params[:user_id])
     @overtime_users = User.where(applying_overtime: true)
     @applying_attendances = Attendance.where(application_information: 1).where(receive_superior_id: @user.id)
   end
 
   def update_overtime_confirmation
-    #userも更新する。ユーザー側では申請中のままなのを改修する
+    #申請承認の更新
     ActiveRecord::Base.transaction do
       overtime_confirmation_params.each do |id, item|
         attendance = Attendance.find(id)

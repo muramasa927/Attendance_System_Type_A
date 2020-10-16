@@ -76,6 +76,7 @@
     <tbody>
       <% @attendances.each do |day| %>
         <tr>
+          <%# 残業申請ボタンを出社してからしか押せないようにする %>
           <td><%= link_to "残業申請", user_attendances_edit_overtime_application_path(@user, day), remote: true, class: "btn btn-primary " %>
           <td><%= l(day.worked_on, format: :short) %></td>
           <% case $days_of_the_week[day.worked_on.wday] %>
@@ -102,8 +103,17 @@
             <% end %>
           </td>
           <td><%= day.note %></td>
-          <td><%= l(day.finish_overtime, format: :hour)if day.finish_overtime.present? %></td>
-          <td><%= l(day.finish_overtime, format: :minute)if day.finish_overtime.present? %></td>
+          <% if day.finish_overtime.present? && day.started_at.present? %>
+            <td><%= l(day.finish_overtime, format: :hour) %></td>
+            <td><%= l(day.finish_overtime, format: :minute) %></td>
+          <% elsif day.finish_overtime.blank? && day.started_at.present? %>
+            <td>18</td>
+            <td>00</td>
+          <% elsif day.finish_overtime.blank? && day.started_at.blank? %>
+            <td></td>
+            <td><td> 
+            
+          <% end %>
           <td></td>
           <td><%= day.business_processing_content %></td>
             <% case day.application_information %>
