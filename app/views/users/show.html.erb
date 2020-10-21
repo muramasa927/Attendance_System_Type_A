@@ -103,29 +103,11 @@
             <% end %>
           </td>
           <td><%= day.note %></td>
-          <% if day.finish_overtime.present? && day.started_at.present? %>
-            <td><%= l(day.finish_overtime, format: :hour) %></td>
-            <td><%= l(day.finish_overtime, format: :minute) %></td>
-          <% elsif day.finish_overtime.blank? && day.started_at.present? %>
-            <td>18</td>
-            <td>00</td>
-          <% elsif day.finish_overtime.blank? && day.started_at.blank? %>
-            <td></td>
-            <td><td> 
-            
-          <% end %>
-          <td></td>
+          <td><%= l(display_finish_time(day), format: :hour) if day.started_at.present? && day.finished_at.blank? %></td>          
+          <td><%= l(display_finish_time(day), format: :minute) if day.started_at.present? && day.finished_at.blank? %></td>
+          <td><%= calculation_overtime(day) %></td>
           <td><%= day.business_processing_content %></td>
-            <% case day.application_information %>
-            <% when 0 %>
-              <td></td>
-            <% when 1 %>
-             <td><%= applying_superior(day) %>へ申請中です</td>
-            <% when 2 %>
-              <td><%= applying_superior(day) %>が承認しました</td>
-            <% when 3 %>
-              <td><%= applying_superior(day) %>が否認しました</td>
-            <% end %>
+          <td><%= display_application_information(day) %></td>
         </tr>
       <% end %>
     </tbody>

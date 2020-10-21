@@ -15,7 +15,9 @@ User.create!(name: "Admin User",
                 email: email,
                 password: "password",
                 password_confirmation: "password",
-                superior: true
+                superior: true,
+                scheduled_start_time: "9:00:00",
+                scheduled_end_time: "18:00:00"
               )
 end
 
@@ -26,6 +28,8 @@ end
                 name: name,
                 email: email,
                 password: "password",
-                password_confirmation: "password"
+                password_confirmation: "password",
+                scheduled_start_time: "9:00:00",
+                scheduled_end_time: "18:00:00"
               )
 end

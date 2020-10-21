@@ -43,13 +43,15 @@ class AttendancesController < ApplicationController
     flash[:danger] = TRANSACTION_ERROR_MSG
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
-  
+  #残業の申請
+  #一般ユーザー→上長
   def edit_overtime_application
     @user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
     @superiors = User.where(superior: true)
   end
-
+  #残業の申請
+  #更新処理
   def update_overtime_application
     apply_overtime_user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
@@ -59,16 +61,17 @@ class AttendancesController < ApplicationController
     flash[:success] = "ユーザーの基本情報を更新しました"
     redirect_to(current_user)
   end
-
+  #残業申請の承認
+  #上長→一般ユーザー
   def edit_overtime_confirmation
-    #申請承認の変更
+
     @user = User.find(params[:user_id])
     @overtime_users = User.where(applying_overtime: true)
     @applying_attendances = Attendance.where(application_information: 1).where(receive_superior_id: @user.id)
   end
-
+  #残業申請の承認
+  #更新処理
   def update_overtime_confirmation
-    #申請承認の更新
     ActiveRecord::Base.transaction do
       overtime_confirmation_params.each do |id, item|
         attendance = Attendance.find(id)
