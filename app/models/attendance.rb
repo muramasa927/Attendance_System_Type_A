@@ -6,6 +6,7 @@ class Attendance < ApplicationRecord
   
   validate :finished_at_is_invalid_without_a_started_at
   # 出勤・退勤時間どちらも存在するとき、出勤時間より早い退勤時間は無効
+  # なお、翌日にチェックが入っている場合、出勤時間より遅い退勤時間を無効にする
   validate :started_at_than_finished_at_fans_if_invalid
   #出勤日当日以外は出勤・退勤時間の両方が入っていないと無効
   validate :not_today_worked_on_started_at_and_finished_at_precence_invalid
@@ -16,7 +17,11 @@ class Attendance < ApplicationRecord
   
   def started_at_than_finished_at_fans_if_invalid
     if started_at.present? && finished_at.present?
-      errors.add(:started_at, "より早い退勤時間は無効です") if started_at > finished_at
+      if next_day
+        errors.add(:finished_at, "より遅い退勤時間は無効です") if started_at < finished_at        
+      else
+        errors.add(:started_at, "より早い退勤時間は無効です") if started_at > finished_at
+      end
     end
   end
   

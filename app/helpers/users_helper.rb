@@ -19,13 +19,6 @@ module UsersHelper
     end
   end
 
-  # 時間外時間を計算します
-  def calculation_overtime(day)
-    if day.finish_overtime.present? && day.application_information = 2
-      format("%.2f", (day.finish_overtime  - @user.scheduled_end_time))
-    end
-  end
-
   # 申請状況の表示を返す
   def display_application_information(day)
     case day.application_information

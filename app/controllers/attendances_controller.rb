@@ -50,31 +50,38 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
     @superiors = User.where(superior: true)
   end
+
   #残業の申請
   #更新処理
   def update_overtime_application
     apply_overtime_user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
-    @attendance.update_attributes(overtime_application_params)
     apply_overtime_user.applying_overtime = true
+    @attendance.update_attributes(overtime_application_params)
+    if params[:user][:attendance][:next_day] = true 
+      @attendance.finish_overtime = @attendance.finish_overtime.change(day: params[:user][:attendance]["finish_overtime(3i)"].to_i + 1) 
+    end
+    @attendance.save
     apply_overtime_user.update_attributes(apply_overtime_user_params)
     flash[:success] = "ユーザーの基本情報を更新しました"
     redirect_to(current_user)
   end
+
   #残業申請の承認
   #上長→一般ユーザー
   def edit_overtime_confirmation
-
     @user = User.find(params[:user_id])
     @overtime_users = User.where(applying_overtime: true)
     @applying_attendances = Attendance.where(application_information: 1).where(receive_superior_id: @user.id)
   end
+
   #残業申請の承認
   #更新処理
   def update_overtime_confirmation
     ActiveRecord::Base.transaction do
       overtime_confirmation_params.each do |id, item|
         attendance = Attendance.find(id)
+        @superior = User.find(attendance.receive_superior_id)
         user = User.find(attendance.user_id)
         user.applying_overtime = false
         user.update_attributes!(apply_overtime_user_params)
@@ -82,11 +89,11 @@ class AttendancesController < ApplicationController
       end
     end
     flash[:success] = "残業申請を更新しました"
-    redirect_to root_url
+    redirect_to user_url(@superior)
   # トランジェクションによるエラーの分岐です
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = TRANSACTION_ERROR_MSG
-    redirect_to root_url
+    redirect_to user_url(@superior)
   end
 
   private
@@ -114,5 +121,5 @@ class AttendancesController < ApplicationController
       redirect_to(root_url)
     end
   end
-  
+
 end

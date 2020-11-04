@@ -98,14 +98,26 @@
           <td><%= l(day.finished_at.floor_to(15.minutes), format: :minute) if day.finished_at.present? %></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
-              <%= str_times = working_times(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
+              <% if day.next_day %>
+                <%= str_times = working_times_for_next(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
+              <% else %>
+                <%= str_times = working_times(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
+              <% end %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
           </td>
           <td><%= day.note %></td>
           <td><%= l(display_finish_time(day), format: :hour) if day.started_at.present? && day.finished_at.blank? %></td>          
           <td><%= l(display_finish_time(day), format: :minute) if day.started_at.present? && day.finished_at.blank? %></td>
-          <td><%= calculation_overtime(day) %></td>
+          <td>
+            <% if day.finished_at.present? && day.finish_overtime.present? %>
+              <% if day.next_day? %>
+                <%= calculation_overtime_for_next(day.finish_overtime.floor_to(15.minutes), @user.scheduled_end_time.floor_to(15.minutes)) %>
+              <% else %>
+                <%= calculation_overtime(day.finish_overtime.floor_to(15.minutes), @user.scheduled_end_time.floor_to(15.minutes)) %>
+              <% end %>
+            <% end %>
+          </td>
           <td><%= day.business_processing_content %></td>
           <td><%= display_application_information(day) %></td>
         </tr>
