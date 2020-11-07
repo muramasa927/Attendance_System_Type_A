@@ -42,8 +42,8 @@
                           <td><%= attendance.select :application_information,[["申請中", 1], ["承認", 2], ["否認", 3]] %></td>
                           <td><%= attendance.check_box :change_information, {}, true, false %></td>
                           <td></td>
+                          <%= attendance.hidden_field :user_id, :value => apply_attendance.user_id %>
                           <%= f.hidden_field :applying_overtime, :value => false %>
-                          <%= f.hidden_field :user_id, :value => apply_attendance.user_id %>
                         </tbody>
                       <% end %>
                     <% end %> 

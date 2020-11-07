@@ -48,7 +48,7 @@ class AttendancesController < ApplicationController
   def edit_overtime_application
     @user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
-    @superiors = User.where(superior: true)
+    @superiors = User.where(superior: true).where.not(id: @user.id)
   end
 
   #残業の申請
@@ -82,10 +82,13 @@ class AttendancesController < ApplicationController
       overtime_confirmation_params.each do |id, item|
         attendance = Attendance.find(id)
         @superior = User.find(attendance.receive_superior_id)
-        user = User.find(attendance.user_id)
-        user.applying_overtime = false
-        user.update_attributes!(apply_overtime_user_params)
-        attendance.update_attributes!(item)
+        if item[:change_information]
+          user = User.find(attendance.user_id)
+          user.applying_overtime = false
+          user.update_attributes!(apply_overtime_user_params)
+          attendance.update_attributes!(item)        
+        else
+        end
       end
     end
     flash[:success] = "残業申請を更新しました"
@@ -103,7 +106,7 @@ class AttendancesController < ApplicationController
   end
 
   def overtime_application_params
-    params.require(:user).permit(attendance: [:finish_overtime, :next_day, :business_processing_content, :receive_superior_id, :apply_user_id, :application_information])[:attendance]
+    params.require(:user).permit(attendance: [:finish_overtime, :next_day, :business_processing_content, :receive_superior_id, :apply_user_id, :application_information, :change_information])[:attendance]
   end
 
   def apply_overtime_user_params
