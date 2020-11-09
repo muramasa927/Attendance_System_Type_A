@@ -35,7 +35,7 @@
                         <tbody>
                           <td><%= apply_attendance.worked_on %></td>
                           <td><%= $days_of_the_week[apply_attendance.worked_on.wday] %></td>
-                          <td><%= apply_attendance.finish_overtime %></td>
+                          <td><%= l(apply_attendance.finish_overtime, format: :time) %></td>
                           <td></td>
                           <td></td>
                           <td><%= apply_attendance.business_processing_content %></td>

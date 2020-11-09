@@ -58,7 +58,7 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
     apply_overtime_user.applying_overtime = true
     @attendance.update_attributes(overtime_application_params)
-    if params[:user][:attendance][:next_day] = true 
+    if params[:user][:attendance][:next_day]
       @attendance.finish_overtime = @attendance.finish_overtime.change(day: params[:user][:attendance]["finish_overtime(3i)"].to_i + 1) 
     end
     @attendance.save
@@ -82,7 +82,9 @@ class AttendancesController < ApplicationController
       overtime_confirmation_params.each do |id, item|
         attendance = Attendance.find(id)
         @superior = User.find(attendance.receive_superior_id)
-        if item[:change_information]
+        debugger
+        #うまく行っていない理由を考える
+        if item[:change_information] && (item[:application_information] != "1")
           user = User.find(attendance.user_id)
           user.applying_overtime = false
           user.update_attributes!(apply_overtime_user_params)
