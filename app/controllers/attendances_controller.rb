@@ -82,14 +82,14 @@ class AttendancesController < ApplicationController
       overtime_confirmation_params.each do |id, item|
         attendance = Attendance.find(id)
         @superior = User.find(attendance.receive_superior_id)
-        debugger
         #うまく行っていない理由を考える
-        if item[:change_information] && (item[:application_information] != "1")
-          user = User.find(attendance.user_id)
+        user = User.find(attendance.user_id)
+        if item[:change_information] && item[:application_information] != "1"
+          attendance.update_attributes!(item)        
+        end
+        if  !(user.attendances.where(application_information: true).any?)
           user.applying_overtime = false
           user.update_attributes!(apply_overtime_user_params)
-          attendance.update_attributes!(item)        
-        else
         end
       end
     end

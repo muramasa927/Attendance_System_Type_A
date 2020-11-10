@@ -21,11 +21,7 @@ module AttendancesHelper
   end
 
   def showing_overtime_user(user,superior)
-    if user.attendances.where(receive_superior_id: superior).any?
-      true
-    else
-      false
-    end
+    user.attendances.where(receive_superior_id: superior).any? ? true : false
   end
   #勤怠編集の翌日チェック時の処理
 
