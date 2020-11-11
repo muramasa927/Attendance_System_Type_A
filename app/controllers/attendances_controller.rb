@@ -54,7 +54,8 @@ class AttendancesController < ApplicationController
   #残業の申請
   #更新処理
   def update_overtime_application
-    apply_overtime_user = User.find(params[:user_id])
+    ActiveRecord::Base.transaction do
+      apply_overtime_user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
     apply_overtime_user.applying_overtime = true
     @attendance.update_attributes(overtime_application_params)
@@ -65,6 +66,10 @@ class AttendancesController < ApplicationController
     apply_overtime_user.update_attributes(apply_overtime_user_params)
     flash[:success] = "ユーザーの基本情報を更新しました"
     redirect_to(current_user)
+    end
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = TRANSACTION_ERROR_MSG
+    redirect_to user_url(@superior) 
   end
 
   #残業申請の承認
@@ -82,7 +87,6 @@ class AttendancesController < ApplicationController
       overtime_confirmation_params.each do |id, item|
         attendance = Attendance.find(id)
         @superior = User.find(attendance.receive_superior_id)
-        #うまく行っていない理由を考える
         user = User.find(attendance.user_id)
         if item[:change_information] && item[:application_information] != "1"
           attendance.update_attributes!(item)        
