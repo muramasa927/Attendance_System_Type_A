@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201019114224) do
+ActiveRecord::Schema.define(version: 20201124114808) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -30,6 +30,18 @@ ActiveRecord::Schema.define(version: 20201019114224) do
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
+  create_table "histories", force: :cascade do |t|
+    t.datetime "log_finish_overtime"
+    t.boolean "log_next_day"
+    t.text "log_business_processing_content"
+    t.integer "log_receive_superior_id"
+    t.integer "log_apply_user_id"
+    t.integer "attendance_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attendance_id"], name: "index_histories_on_attendance_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -39,8 +51,8 @@ ActiveRecord::Schema.define(version: 20201019114224) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "department"
-    t.datetime "basic_time", default: "2020-11-08 23:00:00"
-    t.datetime "work_time", default: "2020-11-08 22:30:00"
+    t.datetime "basic_time", default: "2020-11-20 23:00:00"
+    t.datetime "work_time", default: "2020-11-20 22:30:00"
     t.boolean "superior", default: false
     t.boolean "applying_overtime", default: false
     t.datetime "scheduled_start_time"

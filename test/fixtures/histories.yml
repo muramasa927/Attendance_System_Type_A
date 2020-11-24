@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  log_finish_overtime: 2020-11-24 20:48:08
+  log_next_day: false
+  log_business_processing_content: MyText
+  log_receive_superior_id: 
+  log_apply_user_id: 
+  attendance: one
+
+two:
+  log_finish_overtime: 2020-11-24 20:48:08
+  log_next_day: false
+  log_business_processing_content: MyText
+  log_receive_superior_id: 
+  log_apply_user_id: 
+  attendance: two

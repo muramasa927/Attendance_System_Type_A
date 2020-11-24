@@ -26,7 +26,7 @@
                       <th>業務処理内容</th>
                       <th>指示者確認</th>
                       <th>変更</th>
-                      <th>勤怠を確認する<th>
+                      <th>勤怠を確認する</th>
                     </tr>
                   </thead>
                   <% @applying_attendances.each do | apply_attendance | %>
@@ -47,9 +47,13 @@
                             <% end %>
                           </td>
                           <td><%= apply_attendance.business_processing_content %></td>
-                          <td><%= attendance.select :application_information,[["申請中", 1], ["承認", 2], ["否認", 3]] %></td>
+                          <td><%= attendance.select :application_information,[["なし", 0],["申請中", 1], ["承認", 2], ["否認", 3]] %></td>
                           <td><%= attendance.check_box :change_information, {}, true, false %></td>
-                          <td></td>
+                          <td>
+                          <button type = "button" class = "btn btn-primary" data-dismiss = "modal">
+                            確認する
+                          </button>
+                          </td>
                           <%= attendance.hidden_field :user_id, :value => apply_attendance.user_id %>
                           <%= f.hidden_field :applying_overtime, :value => false %>
                         </tbody>

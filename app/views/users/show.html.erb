@@ -112,9 +112,9 @@
           <td>
             <% if day.finished_at.present? && day.finish_overtime.present? %>
               <% if day.next_day? %>
-                <%= calculation_overtime_for_next(day.finish_overtime.floor_to(15.minutes), @user.scheduled_end_time.floor_to(15.minutes)) %>
+                <%= calculation_overtime_for_next(day.finished_at.floor_to(15.minutes), @user.scheduled_end_time.floor_to(15.minutes)) %>
               <% else %>
-                <%= calculation_overtime(day.finish_overtime.floor_to(15.minutes), @user.scheduled_end_time.floor_to(15.minutes)) %>
+                <%= calculation_overtime(day.finished_at.floor_to(15.minutes), @user.scheduled_end_time.floor_to(15.minutes)) %>
               <% end %>
             <% end %>
           </td>
