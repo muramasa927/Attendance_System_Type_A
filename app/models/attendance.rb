@@ -1,5 +1,8 @@
 class Attendance < ApplicationRecord
+  has_one :history, dependent: :destroy
   belongs_to :user
+
+  attr_accessor :remember_token
   
   validates :worked_on, presence: true
   validates :note, length: { maximum: 50 }

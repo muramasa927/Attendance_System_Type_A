@@ -33,3 +33,11 @@ module UsersHelper
     end
   end
 end
+
+def attendance_confirm?(user)
+  user == current_user 
+end
+
+#def current_user?(user)
+#  user == current_user
+#end

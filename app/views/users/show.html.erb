@@ -34,11 +34,13 @@
   <% end %>
 </div>
 
-<div class = "btn-users-show">
-  <%= link_to "← 前月へ", user_path(date: @first_day.prev_month), class: "btn btn-info" %>
-  <%= link_to "１ヶ月の勤怠編集へ", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-success" %>
-  <%= link_to "次月へ →", user_path(date: @first_day.next_month), class: "btn btn-info" %>
-</div>
+<% if @user == current_user %>
+  <div class = "btn-users-show">
+    <%= link_to "← 前月へ", user_path(date: @first_day.prev_month), class: "btn btn-info" %>
+    <%= link_to "１ヶ月の勤怠編集へ", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-success" %>
+    <%= link_to "次月へ →", user_path(date: @first_day.next_month), class: "btn btn-info" %>
+  </div>
+<% end %>
 
 <div>
   <table class = "table table-bordered table-condensed table-hover" id = "table-attendances" >
@@ -77,7 +79,7 @@
       <% @attendances.each do |day| %>
         <tr>
           <%# 残業申請ボタンを出社してからしか押せないようにする %>
-          <td><%= link_to "残業申請", user_attendances_edit_overtime_application_path(@user, day), remote: true, class: "btn btn-primary " %>
+          <td><%= link_to "残業申請", user_attendances_edit_overtime_application_path(@user, day), remote: true, class: "btn btn-primary " if @user == current_user %>
           <td><%= l(day.worked_on, format: :short) %></td>
           <% case $days_of_the_week[day.worked_on.wday] %>
           <% when "日" then %>
@@ -88,8 +90,10 @@
             <td><%= $days_of_the_week[day.worked_on.wday] %></td>
           <% end %>
           <td>
-          <% if btn_text = attendance_state(day) %>
-              <%= link_to "#{btn_text}登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-success btn-attendance" %>
+          <% if @user == current_user %>
+            <% if btn_text = attendance_state(day) %>
+                <%= link_to "#{btn_text}登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-success btn-attendance" %>
+            <% end %>
           <% end %>
           </td>
           <td><%= l(day.started_at.floor_to(15.minutes), format: :hour) if day.started_at.present? %></td>

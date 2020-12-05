@@ -50,9 +50,7 @@
                           <td><%= attendance.select :application_information,[["なし", 0],["申請中", 1], ["承認", 2], ["否認", 3]] %></td>
                           <td><%= attendance.check_box :change_information, {}, true, false %></td>
                           <td>
-                          <button type = "button" class = "btn btn-primary" data-dismiss = "modal">
-                            確認する
-                          </button>
+                            <%= link_to "確認する", user_path(apply_user), class: "btn btn-success" %>
                           </td>
                           <%= attendance.hidden_field :user_id, :value => apply_attendance.user_id %>
                           <%= f.hidden_field :applying_overtime, :value => false %>

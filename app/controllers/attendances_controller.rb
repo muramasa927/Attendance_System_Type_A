@@ -33,7 +33,6 @@ class AttendancesController < ApplicationController
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
         attendance = Attendance.find(id)
-        attendance.update_attributes!(item)
       end
     end
     flash[:success] = "１ヶ月分の勤怠情報を更新しました。"
@@ -85,15 +84,19 @@ class AttendancesController < ApplicationController
   def update_overtime_confirmation
     ActiveRecord::Base.transaction do
       overtime_confirmation_params.each do |id, item|
-        attendance = Attendance.find(id)
-        @superior = User.find(attendance.receive_superior_id)
-        user = User.find(attendance.user_id)
+        @attendance = Attendance.find(id)
+        @superior = User.find(@attendance.receive_superior_id)
+        user = User.find(@attendance.user_id)
 
           if item[:change_information] && item[:application_information] != "1"
-            if item[:application_information] = "0"
-              debugger
+            if item[:application_information] == "0"
+              return_history
+              item[:application_information] = @attendance.history.log_application_information
             end
-            attendance.update_attributes!(item)       
+            #変更がtrueかつ申請情報が[申請中以外]の時
+            @attendance.update_attributes!(item)  
+            @attendance.history = History.new if @attendance.history.blank?
+            add_history
           end
         if  !(user.attendances.where(application_information: true).any?)
           user.applying_overtime = false
@@ -127,6 +130,13 @@ class AttendancesController < ApplicationController
     params.require(:user).permit(:applying_overtime, applying_attendances:[:change_information,:application_information])[:applying_attendances]
   end
 
+  def attendance_history_params
+    params.require(:history).permit( 
+      :log_finish_overtime, :log_next_day, :log_business_processing_content, 
+      :log_receive_superior_id, :log_apply_user_id
+    )
+  end
+
   def admin_or_correct_user
     @user = User.find(params[:user_id]) if @user.blank?
     unless current_user?(@user) || current_user.admin?
@@ -135,4 +145,24 @@ class AttendancesController < ApplicationController
     end
   end
 
+  #残業申請履歴を追加する
+  def add_history
+    @attendance.history.log_finish_overtime = @attendance.finish_overtime
+    @attendance.history.log_application_information = @attendance.application_information
+    @attendance.history.log_next_day = @attendance.next_day
+    @attendance.history.log_business_processing_content = @attendance.business_processing_content
+    @attendance.history.log_receive_superior_id = @attendance.receive_superior_id
+    @attendance.history.log_apply_user_id = @attendance.apply_user_id
+    @attendance.history.save
+  end
+
+  def return_history
+    @attendance.finish_overtime = @attendance.history.log_finish_overtime
+    @attendance.application_information = @attendance.history.log_application_information
+    @attendance.next_day = @attendance.history.log_next_day
+    @attendance.business_processing_content = @attendance.history.log_business_processing_content
+    @attendance.receive_superior_id = @attendance.history.log_receive_superior_id
+    @attendance.apply_user_id = @attendance.history.log_apply_user_id
+    @attendance.save
+  end
 end

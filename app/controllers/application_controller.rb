@@ -14,9 +14,11 @@ class ApplicationController < ActionController::Base
   # ログイン済みのユーザーか確認
   def logged_in_user
     unless logged_in?
-      store_location
-      flash[:danger] = "ログインしてください"
-      redirect_to login_url
+      if !@user.superior?
+        store_location
+        flash[:danger] = "ログインしてください"
+        redirect_to login_url
+      end
     end
   end
   
@@ -37,7 +39,11 @@ class ApplicationController < ActionController::Base
   end
   # 他のユーザーへのアクセスを不可
   def other_user
-    redirect_to root_url unless User.find(params[:id]) == current_user || current_user.admin?
+    if User.find(params[:id]) == current_user || current_user.admin? || current_user.superior?
+    else
+      flash[:danger] = "他ユーザーへのアクセスは制限されています"
+      redirect_to root_url
+    end
   end
   
   # ページ出力前に１ヶ月分のデータの存在を確認・セット
@@ -55,7 +61,10 @@ class ApplicationController < ActionController::Base
       # トランザクション
       ActiveRecord::Base.transaction do
         # １ヶ月分の勤怠データを生成
-        one_month.each { |day| @user.attendances.create!(worked_on: day) }
+        # one_month.each { |day| @user.attendances.create!(worked_on: day) }
+        one_month.each do |day|
+          @user.attendances.create!(worked_on: day)
+        end
       end
       @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
     end

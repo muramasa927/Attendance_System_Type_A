@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20201124114808) do
   end
 
   create_table "histories", force: :cascade do |t|
+    t.integer "log_application_information"
     t.datetime "log_finish_overtime"
     t.boolean "log_next_day"
     t.text "log_business_processing_content"
@@ -51,8 +52,8 @@ ActiveRecord::Schema.define(version: 20201124114808) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "department"
-    t.datetime "basic_time", default: "2020-11-20 23:00:00"
-    t.datetime "work_time", default: "2020-11-20 22:30:00"
+    t.datetime "basic_time", default: "2020-11-29 23:00:00"
+    t.datetime "work_time", default: "2020-11-29 22:30:00"
     t.boolean "superior", default: false
     t.boolean "applying_overtime", default: false
     t.datetime "scheduled_start_time"
