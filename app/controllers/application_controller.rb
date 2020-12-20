@@ -5,12 +5,19 @@ class ApplicationController < ActionController::Base
   $days_of_the_week = %w{日 月 火 水 木 金 土}
   
   # beforeフィルタ
+
+
     
   # ユーザーを取得する
   def set_user
     @user = User.find(params[:id])
   end
-  
+
+  #userがadminの時、indexページへリダイレクトする
+  def not_access_to_admin
+    redirect_to users_url if @user.admin? 
+  end
+
   # ログイン済みのユーザーか確認
   def logged_in_user
     unless logged_in?
