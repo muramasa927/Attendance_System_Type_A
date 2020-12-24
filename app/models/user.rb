@@ -23,6 +23,17 @@ class User < ApplicationRecord
       all
     end
   end
+  #Model読み込み、DB登録
+  def self.import(file)
+    CSV.foreach(file.path, headers: true) do |row|
+      # IDが見つかれば、レコードを呼び出し、見つかれなければ、新しく作成
+      user = find_by(id: row["id"]) || new
+      # CSVからデータを取得し、設定する
+      user.attributes = row.to_hash.slice(*updatable_attributes)
+      # 保存する
+      user.save
+    end
+  end
   
   # 渡された文字列のハッシュを返します
   def User.digest(string)
@@ -56,6 +67,11 @@ class User < ApplicationRecord
   # ユーザーのログイン情報を破棄します
   def forget
     update_attribute(:remember_digest, nil)
+  end
+
+  # 更新を許可するカラムを定義
+  def self.updatable_attributes
+    ["id", "name", "age"]
   end
   
 end
