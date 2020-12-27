@@ -56,7 +56,6 @@ class UsersController < ApplicationController
 
   #csvインポート
   def import
-    debugger
     # fileはtmpに自動で一時保存される
     User.import(params[:file])
     redirect_to users_url

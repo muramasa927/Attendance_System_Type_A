@@ -56,7 +56,7 @@ class ApplicationController < ActionController::Base
   # ページ出力前に１ヶ月分のデータの存在を確認・セット
   def set_one_month
     @first_day = params[:date].nil? ?
-                 Date.current.beginning_of_month : params[:date].to_date
+    Date.current.beginning_of_month : params[:date].to_date
     @last_day = @first_day.end_of_month
     # 対象の月の日数を代入
     one_month = [*@first_day..@last_day]
