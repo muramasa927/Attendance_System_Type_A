@@ -3,13 +3,17 @@ ja:
     models:
       user: ユーザー
       attendance: 勤怠
-    attributes: 
+    attributes:
       user:
         id: ID
         name: 名前
         email: メールアドレス
         affiliation: 所属
         basic_work_time: 基本時間
+        employee_number: 社員番号
+        uid: カードID
+        designated_work_start_time: 指定勤務開始時間
+        designated_work_end_time: 指定勤務終了時間
         work_time: 勤務時間
         password: パスワード
         password_confirmation: パスワード再入力
@@ -22,6 +26,3 @@ ja:
         note: 備考
         user: ユーザーID
         finish_overtime: 終了予定時間
-        
-        
-        
