@@ -55,16 +55,16 @@ class AttendancesController < ApplicationController
   def update_overtime_application
     ActiveRecord::Base.transaction do
       apply_overtime_user = User.find(params[:user_id])
-    @attendance = Attendance.find(params[:id])
-    apply_overtime_user.applying_overtime = true
-    @attendance.update_attributes(overtime_application_params)
-    if params[:user][:attendance][:next_day]
-      @attendance.finish_overtime = @attendance.finish_overtime.change(day: params[:user][:attendance]["finish_overtime(3i)"].to_i + 1) 
-    end
-    @attendance.save
-    apply_overtime_user.update_attributes(apply_overtime_user_params)
-    flash[:success] = "ユーザーの基本情報を更新しました"
-    redirect_to(current_user)
+      @attendance = Attendance.find(params[:id])
+      apply_overtime_user.applying_overtime = true
+      @attendance.update_attributes(overtime_application_params)
+      if params[:user][:attendance][:next_day]
+        @attendance.finish_overtime = @attendance.finish_overtime.change(day: params[:user][:attendance]["finish_overtime(3i)"].to_i + 1) 
+      end
+      @attendance.save
+      apply_overtime_user.update_attributes(apply_overtime_user_params)
+      flash[:success] = "ユーザーの基本情報を更新しました"
+      redirect_to(current_user)
     end
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = TRANSACTION_ERROR_MSG
@@ -87,17 +87,16 @@ class AttendancesController < ApplicationController
         @attendance = Attendance.find(id)
         @superior = User.find(@attendance.receive_superior_id)
         user = User.find(@attendance.user_id)
-
-          if item[:change_information] && item[:application_information] != "1"
-            if item[:application_information] == "0"
-              return_history
-              item[:application_information] = @attendance.history.log_application_information
-            end
-            #変更がtrueかつ申請情報が[申請中以外]の時
-            @attendance.update_attributes!(item)  
-            @attendance.history = History.new if @attendance.history.blank?
-            add_history
+        if item[:change_information] && item[:application_information] != "1"
+          if item[:application_information] == "0"
+            return_history
+            item[:application_information] = @attendance.history.log_application_information
           end
+          #変更がtrueかつ申請情報が[申請中以外]の時
+          @attendance.update_attributes!(item)  
+          @attendance.history = History.new if @attendance.history.blank?
+          add_history
+        end
         if  !(user.attendances.where(application_information: true).any?)
           user.applying_overtime = false
           user.update_attributes!(apply_overtime_user_params)

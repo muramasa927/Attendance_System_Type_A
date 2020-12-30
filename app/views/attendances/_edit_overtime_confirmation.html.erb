@@ -36,13 +36,13 @@
                           <td><%= apply_attendance.worked_on %></td>
                           <td><%= $days_of_the_week[apply_attendance.worked_on.wday] %></td>
                           <td><%= l(apply_attendance.finish_overtime, format: :time) %></td>
-                          <td><%= l(apply_user.scheduled_end_time, format: :time) %></td>
+                          <td><%= l(apply_user.designated_work_end_time, format: :time) %></td>
                           <td>
                             <% if apply_attendance.finish_overtime.present? %>
                               <% if apply_attendance.next_day? %>
-                                <%= calculation_overtime_for_next(apply_attendance.finish_overtime.floor_to(15.minutes), apply_user.scheduled_end_time.floor_to(15.minutes)) %>
+                                <%= calculation_overtime_for_next(apply_attendance.finish_overtime.floor_to(15.minutes), apply_user.designated_work_end_time.floor_to(15.minutes)) %>
                               <% else %>
-                                <%= calculation_overtime(apply_attendance.finish_overtime.floor_to(15.minutes), apply_user.scheduled_end_time.floor_to(15.minutes)) %>
+                                <%= calculation_overtime(apply_attendance.finish_overtime.floor_to(15.minutes), apply_user.designated_work_end_time.floor_to(15.minutes)) %>
                               <% end %>
                             <% end %>
                           </td>

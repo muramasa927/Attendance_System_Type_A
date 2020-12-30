@@ -13,9 +13,9 @@ module UsersHelper
   # 終了予定時間の表示を返す
   def display_finish_time(day)
     if day.finish_overtime.blank?
-      @user.scheduled_end_time
+      @user.designated_work_end_time
     else
-       day.application_information == 2 ? day.finish_overtime : @user.scheduled_end_time
+       day.application_information == 2 ? day.finish_overtime : @user.designated_work_end_time
     end
   end
 

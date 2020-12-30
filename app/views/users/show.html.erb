@@ -79,7 +79,11 @@
       <% @attendances.each do |day| %>
         <tr>
           <%# 残業申請ボタンを出社してからしか押せないようにする %>
-          <td><%= link_to "残業申請", user_attendances_edit_overtime_application_path(@user, day), remote: true, class: "btn btn-primary " if @user == current_user %>
+          <% if day.started_at.present? %>
+            <td><%= link_to "残業申請", user_attendances_edit_overtime_application_path(@user, day), remote: true, class: "btn btn-primary " if @user == current_user %>
+          <% else%>
+            <td></td>
+          <% end %>
           <td><%= l(day.worked_on, format: :short) %></td>
           <% case $days_of_the_week[day.worked_on.wday] %>
           <% when "日" then %>
@@ -116,9 +120,9 @@
           <td>
             <% if day.finished_at.present? && day.finish_overtime.present? %>
               <% if day.next_day? %>
-                <%= calculation_overtime_for_next(day.finished_at.floor_to(15.minutes), @user.scheduled_end_time.floor_to(15.minutes)) %>
+                <%= calculation_overtime_for_next(day.finished_at.floor_to(15.minutes), @user.designated_work_end_time.floor_to(15.minutes)) %>
               <% else %>
-                <%= calculation_overtime(day.finished_at.floor_to(15.minutes), @user.scheduled_end_time.floor_to(15.minutes)) %>
+                <%= calculation_overtime(day.finished_at.floor_to(15.minutes), @user.designated_work_end_time.floor_to(15.minutes)) %>
               <% end %>
             <% end %>
           </td>
