@@ -79,7 +79,7 @@
       <% @attendances.each do |day| %>
         <tr>
           <%# 残業申請ボタンを出社してからしか押せないようにする %>
-          <% if day.started_at.present? %>
+          <% if @user.attendance_flag? %>
             <td><%= link_to "残業申請", user_attendances_edit_overtime_application_path(@user, day), remote: true, class: "btn btn-primary " if @user == current_user %>
           <% else%>
             <td></td>

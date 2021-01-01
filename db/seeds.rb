@@ -7,7 +7,9 @@ User.create!(
             password_confirmation: "password",
             employee_number: "a0001",
             uid: 1,
-            admin: true
+            admin: true,
+            designated_work_start_time: "9:00:00",
+            designated_work_end_time: "18:00:00"
           )
             
 2.times do |n|
@@ -36,7 +38,7 @@ end
                 password: "password",
                 password_confirmation: "password",
                 employee_number: "u000#{x+1}",
-                uid: x+3,
+                uid: x+4,
                 designated_work_start_time: "9:00:00",
                 designated_work_end_time: "18:00:00"
               )

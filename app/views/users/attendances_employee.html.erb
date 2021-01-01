@@ -1,0 +1,22 @@
+<% provide(:title, 'Attendances Employee') %>
+<% provide(:class_text, 'search-control') %>
+
+<h1>出勤社員一覧</h1>
+
+<div class="col-md-10 col-md-offset-1">
+  <table class="table table-condensed table-hover table-bordered table-striped" id="table-attendances_employee">
+    <thead>
+      <tr>
+				<th class="col-md-6 center"><%= User.human_attribute_name :employee_number %></th>
+        <th class = "col-md-6 center" ><%= User.human_attribute_name :name %></th>
+      </tr>
+    </thead>
+
+    <% @attendances_employee.each do |user| %>
+			<tr>
+				<td class=" col-md-6 center"><%= user.employee_number %></td>
+				<td class="col-md-6 center"><%= user.name %></td>
+			</tr>
+		<% end %>
+  </table>
+</div>

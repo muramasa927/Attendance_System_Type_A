@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   before_action :not_access_to_admin, only: [:show, :edit]
   before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy,:edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:edit, :update]
-  before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info]
+  before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info, :attendances_employee]
   before_action :set_one_month, only: :show
   before_action :new_login_user, only: :new
   before_action :other_user, only: :show
@@ -61,6 +61,11 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   
+  #出勤社員一覧
+  def attendances_employee
+    @attendances_employee = User.where(attendance_flag: true).paginate(page: params[:page])
+  end
+
   def edit_basic_info
   
   end
