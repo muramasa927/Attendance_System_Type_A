@@ -1,5 +1,5 @@
 <% provide(:title, 'All Users') %>
-<% provide(:class_text, 'search-control') %>
+<% provide(:class_text, 'index-control') %>
 <h1>ユーザー一覧</h1>
 
 <%= form_tag import_users_path, multipart: true do %>
@@ -27,7 +27,7 @@
   
   <!-- アコーディオン(collapse)機能 -->
   <div class="col-md-10 col-md-offset-1 panelgroup" id = "UserAccordion">
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
       <div class = "panel-heading">
         <h4 class = "panel-title"　align = "left"><%= user.name %></h4>
       </div>
@@ -38,7 +38,7 @@
         %>
       </div>
       <div class = "panel-footer">
-        <a data-toggle="collapse" data-parent="#UserAccordion" href="#EditAccordionCollapse<%= user.id %>" class = "btn btn-primary">
+        <a data-toggle="collapse" data-parent="#UserAccordion" href="#EditAccordionCollapse<%= user.id %>" class = "btn btn-primary btn-lg index-edit__btn">
           編集
         </a>
       
@@ -54,6 +54,21 @@
 
           <%= f.label :affiliation, class: "label-#{yield(:class_text)}" %>
           <%= f.text_field :affiliation, class: "form-control" %>
+
+          <%= f.label :employee_number, class: "label-#{yield(:class_text)}" %>
+          <%= f.text_field :employee_number, class: "form-control" %>
+
+          <%= f.label :uid, class: "label-#{yield(:class_text)}" %>
+          <%= f.text_field :uid, class: "form-control" %>
+
+          <%= f.label :basic_work_time, class: "label-#{yield(:class_text)}" %>
+          <%= f.time_field :basic_work_time, class: "form-control" %>
+
+          <%= f.label :designated_work_start_time, class: "label-#{yield(:class_text)}" %>
+          <%= f.time_field :designated_work_start_time, class: "form-control" %>
+
+          <%= f.label :designated_work_end_time, class: "label-#{yield(:class_text)}" %>
+          <%= f.time_field :designated_work_end_time, class: "form-control" %>
 
           <%= f.label :password, class: "label-#{yield(:class_text)}" %>
           <%= f.password_field :password, class: "form-control" %>
