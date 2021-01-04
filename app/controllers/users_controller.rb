@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   before_action :other_user, only: :show
   
   def index
-    @users = User.where(admin: false).paginate(page: params[:page]).search(params[:search])
+    @users = User.paginate(page: params[:page],per_page: 10).search(params[:search]).where(admin: false)
   end
   
   def show
@@ -39,13 +39,21 @@ class UsersController < ApplicationController
   end
   
   def update
-    if @user.update_attributes(user_params)
-      flash[:success] = "ユーザー情報を更新しました"
-      redirect_to @user
+    if current_user.admin?
+      if @user.update_attributes(basic_info_params)
+        flash[:success] = "#{@user.name}のユーザー情報を更新しました"
+        redirect_to users_url
+      else
+        redirect_to users_url
+      end
     else
-      render :edit
+      if @user.update_attributes(user_params)
+        flash[:success] = "ユーザー情報を更新しました"
+        redirect_to @user
+      else
+        render :edit
+      end
     end
-    
   end
   
   def destroy

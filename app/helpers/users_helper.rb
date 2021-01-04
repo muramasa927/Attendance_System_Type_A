@@ -15,7 +15,7 @@ module UsersHelper
     if day.finish_overtime.blank?
       @user.designated_work_end_time
     else
-       day.application_information == 2 ? day.finish_overtime : @user.designated_work_end_time
+      day.application_information == 2 ? day.finish_overtime : @user.designated_work_end_time
     end
   end
 
