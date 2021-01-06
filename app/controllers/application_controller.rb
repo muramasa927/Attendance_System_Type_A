@@ -42,7 +42,10 @@ class ApplicationController < ActionController::Base
   
   # 管理者権限保有者か判定
   def admin_user
-    redirect_to root_url unless current_user.admin?
+    unless current_user.admin?
+      flash[:danger] = "管理者ではありません"
+      redirect_to root_url
+    end
   end
   # 他のユーザーへのアクセスを不可
   def other_user
@@ -51,6 +54,11 @@ class ApplicationController < ActionController::Base
       flash[:danger] = "他ユーザーへのアクセスは制限されています"
       redirect_to root_url
     end
+  end
+
+  #拠点情報を取得する
+  def set_company
+    @company = Company.find(params[:id])
   end
   
   # ページ出力前に１ヶ月分のデータの存在を確認・セット
@@ -80,5 +88,5 @@ class ApplicationController < ActionController::Base
     flash[:danger] = "ページ情報の更新に失敗しました。再アクセスしてください。"
     redirect_to root_url
   end
-  
+
 end

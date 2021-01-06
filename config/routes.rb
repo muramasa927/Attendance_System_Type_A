@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+
   get 'sessions/new'
 
   root 'static_pages#top'
@@ -14,7 +14,9 @@ Rails.application.routes.draw do
   get 'users/attendances_employee'
   get 'users/edit_time_info'
   patch 'users/update_time_info'
-      
+  
+  resources :companies, except: [:show, :edit, :new]
+
   resources :users do
     collection {post :import}
     member do
@@ -30,7 +32,6 @@ Rails.application.routes.draw do
       to: 'attendances#update_overtime_application', as: :attendances_update_overtime_application
       get 'attendances/edit_overtime_confirmation'
   end
-
   
   patch 'attendances/update_overtime_confirmation'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

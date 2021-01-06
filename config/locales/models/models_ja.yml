@@ -26,3 +26,7 @@ ja:
         note: 備考
         user: ユーザーID
         finish_overtime: 終了予定時間
+      company:
+        id: 拠点番号
+        name: 名前
+        attendance_flag: 出勤/退勤
