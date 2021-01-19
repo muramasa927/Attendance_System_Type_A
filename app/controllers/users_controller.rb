@@ -15,6 +15,7 @@ class UsersController < ApplicationController
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
     @apply_attendances = Attendance.where(application_information: 1).where(receive_superior_id: @user.id)
+    @change_attendances = Attendance.where(change_attendance_information: 1).where(receive_superior_id_to_change_attendance: @user.id)
     @superiors = User.where(superior: true)
 
   end

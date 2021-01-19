@@ -38,6 +38,8 @@
               </td>
               <td><%= attendance.text_field :note, class: "form-control" %></td>
               <td><%= attendance.collection_select :receive_superior_id_to_change_attendance, @superiors, :id, :name, { :include_blank => true } %></td>
+              <%= attendance.hidden_field :change_attendance_information, :value => 1 %>
+              <%= attendance.hidden_field :apply_user_id_to_change_attendance, :value => @user.id %>
             </tr>
           <% end %>
         <% end %>

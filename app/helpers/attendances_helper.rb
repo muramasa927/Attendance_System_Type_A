@@ -36,4 +36,5 @@ module AttendancesHelper
     calc_time = schedule_end.change(year: finish_time.year, month: finish_time.month, day: finish_time.day - 1)
     format("%.2f", (((finish_time.time - calc_time.time) / 60) /60))
   end
+
 end

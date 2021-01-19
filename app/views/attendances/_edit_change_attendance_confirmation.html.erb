@@ -1,0 +1,92 @@
+<div class = "modal-dialog modal-lg modal-dialog-center">
+  <div class = "modal-content">
+    <div class = "modal-header">
+      <button type = "button" class = "close" data-dismiss = "modal" aria-label = "Close">
+        <span aria-hidden = "true">&times;</span>
+      </button>
+    </div>
+
+    <div class = "modal-body">
+      <div class = "row">
+        <div class = "col-md-12">
+          <h1>勤怠変更承認画面</h1>
+          <%= form_with(model: @user, url: attendances_update_change_attendance_confirmation_path, local: true, method: :patch) do |f| %>
+            <% @change_attendance_users.each do |apply_user| %>
+                <div><%= apply_user.name %>の残業申請</div>
+                <table class = "table table-bordered table-sm table-hover">
+                  <thead>
+                    <tr>
+                      <th rowspan = 3>日付</th>
+                      <th rowspan = 3>曜日</th>
+                      <th colspan = 4>変更前</th>
+                      <th colspan = 4>変更後</th>
+                      <th rowspan = 3>備考</th>
+                      <th rowspan = 3>指示者確認</th>
+                      <th rowspan = 3>変更</th>
+                      <th rowspan = 3 >勤怠を確認する</th>
+                    </tr>
+                    <tr>
+                      <th colspan = 2>出社</th>
+                      <th colspan = 2>退社</th>
+                      <th colspan = 2>出社</th>
+                      <th colspan = 2>退社</th>
+                    </tr>
+                    <tr>
+                      <th>時</th>
+                      <th>分</th>
+                      <th>時</th>
+                      <th>分</th>
+                      <th>時</th>
+                      <th>分</th>
+                      <th>時</th>
+                      <th>分</th>
+                    </tr>
+                  </thead>
+                  <% @applying_change_attendances.each do | apply_attendance | %>
+                    <%= f.fields_for "applying_change_attendances[]", apply_attendance do | attendance | %>
+                      <% if apply_user.id == apply_attendance.apply_user_id_to_change_attendance%>
+                        <tbody>
+                          <td><%= apply_attendance.worked_on %></td>
+                          <td><%= $days_of_the_week[apply_attendance.worked_on.wday] %></td>
+                          <!-- 変更前出社時間（分） -->
+                          <td></td>
+                          <!-- 変更前出社時間（秒） -->
+                          <td></td>
+                          <!-- 変更前退社時間（分） -->
+                          <td></td>
+                          <!-- 変更前退社時間（秒） -->
+                          <td></td>
+                          <!-- 変更後出社時間（分） -->
+                          <td><%= l(apply_attendance.started_at.floor_to(15.minutes), format: :hour) if attendance.started_at.present? %></td>
+                          <!-- 変更後出社時間（秒） -->
+                          <td><%= l(apply_attendance.started_at.floor_to(15.minutes), format: :minute) if attendance.started_at.present? %></td>
+                          <!-- 変更後退社時間（分） -->
+                          <td><%= l(apply_attendance.finished_at_at.floor_to(15.minutes), format: :hour) if attendance.finished_at.present? %></td>
+                          <!-- 変更後退社時間（秒） -->
+                          <td><%= l(apply_attendance.finished_at_at.floor_to(15.minutes), format: :minute) if attendance.finished_at.present? %></td>
+                          <!-- 備考 -->
+                          <td><% apply_attendance.note %></td>
+                          <!-- 指示者確認,selectbox -->
+                          <td></td>
+                          <!-- 変更, checkbox -->
+                          <td></td>
+                          <!-- 勤怠を確認 -->
+                          <td></td>
+                        </tbody>
+                      <% end %>
+                    <% end %> 
+                  <% end %>    
+                </table>
+            <% end %>
+            <div class = "center">
+              <%= f.submit "更新", class: "btn btn-primary" %>
+              <button type = "button" class = "btn btn-default" data-dismiss = "modal">
+                キャンセル
+              </button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -13,7 +13,7 @@
       <td>名前:<%= @user.name %></td>
       <td>出勤日数:<%= @worked_sum %>日</td>
       <td>月末日:<%= l(@last_day, format: :short) %></td>
-   </tr>
+    </tr>
   </table>
 </div>
 
@@ -21,9 +21,15 @@
 <div class = "container">
   <% if @user.superior? %>
     <p><%= link_to "【所属長承認申請のお知らせ】" %></p>
-    <p><%= link_to "【勤怠変更申請のお知らせ】" %></p>
     <p>
-      
+      <% if @change_attendances.present? %>
+        <%= link_to "【勤怠変更申請のお知らせ", user_attendances_edit_change_attendance_confirmation_path(@user), remote: true  %>
+        <span><%= "[#{@change_attendances.count}件のお知らせがあります]" %></span>
+      <% else %>
+        <div>【勤怠変更申請のお知らせ】</div>
+      <% end %>
+    </p>
+    <p>
       <% if @apply_attendances.present? %>
         <%= link_to "【残業申請のお知らせ】", user_attendances_edit_overtime_confirmation_path(@user), remote: true %>
         <span><%= "[#{@apply_attendances.count}件のお知らせがあります]" %></span>
@@ -79,11 +85,7 @@
       <% @attendances.each do |day| %>
         <tr>
           <%# 残業申請ボタンを出社してからしか押せないようにする %>
-          <% if @user.attendance_flag? %>
-            <td><%= link_to "残業申請", user_attendances_edit_overtime_application_path(@user, day), remote: true, class: "btn btn-primary " if @user == current_user %>
-          <% else%>
-            <td></td>
-          <% end %>
+          <td><%= link_to "残業申請", user_attendances_edit_overtime_application_path(@user, day), remote: true, class: "btn btn-primary " if @user == current_user %>
           <td><%= l(day.worked_on, format: :short) %></td>
           <% case $days_of_the_week[day.worked_on.wday] %>
           <% when "日" then %>
@@ -96,7 +98,7 @@
           <td>
           <% if @user == current_user %>
             <% if btn_text = attendance_state(day) %>
-                <%= link_to "#{btn_text}登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-success btn-attendance" %>
+              <%= link_to "#{btn_text}登録", user_attendance_path(@user, day), method: :patch, class: "btn btn-success btn-attendance" %>
             <% end %>
           <% end %>
           </td>
@@ -157,3 +159,4 @@
 <%# モーダルウインドウ表示 %>
 <div id = "edit-overtime-application" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
 <div id = "edit-overtime-confirmation" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
+<div id = "edit-change-attendance-confirmation" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
