@@ -7,7 +7,19 @@ module UsersHelper
   
   # 表示する上司の名前を返す
   def applying_superior(day)
-    @superiors.find(day.receive_superior_id).name
+    if day.receive_superior_id.present?
+      @superiors.find(day.receive_superior_id).name
+    elsif day.history.log_receive_superior_id.present?
+      @superiors.find(day.history.log_receive_superior_id).name
+    end
+  end
+  # 勤怠変更で表示する上司の名前を返す
+  def change_attendance_superior(day)
+    if day.receive_superior_id_to_change_attendance.present?
+      @superiors.find(day.receive_superior_id_to_change_attendance).name
+    elsif day.history.log_receive_superior_id_to_change_attendance.present?
+      @superiors.find(day.history.log_receive_superior_id_to_change_attendance).name
+    end
   end
 
   # 終了予定時間の表示を返す
@@ -19,19 +31,33 @@ module UsersHelper
     end
   end
 
-  # 申請状況の表示を返す
+  # 残業の申請状況の表示を返す
   def display_application_information(day)
     case day.application_information
     when 0
       str = ""
     when 1
-      str = applying_superior(day) + "へ申請中です"
+      str = applying_superior(day) + "へ残業申請中です"
     when 2
-      str = applying_superior(day) + "が承認しました"
+      str = applying_superior(day) + "が残業を承認しました"
     when 3
-      str = applying_superior(day) + "が否認しました"
+      str = applying_superior(day) + "が残業を否認しました"
     end
   end
+
+    # 勤怠変更の申請状況の表示を返す
+    def display_change_attendance_information(day)
+      case day.change_attendance_information
+      when 0
+        str = ""
+      when 1
+        str = change_attendance_superior(day) + "へ勤怠変更申請中です"
+      when 2
+        str = change_attendance_superior(day) + "が勤怠変更を承認しました"
+      when 3
+        str = change_attendance_superior(day) + "が勤怠変更を否認しました"
+      end
+    end
 end
 
 def attendance_confirm?(user)

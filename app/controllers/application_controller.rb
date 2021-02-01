@@ -77,7 +77,8 @@ class ApplicationController < ActionController::Base
         # １ヶ月分の勤怠データを生成
         # one_month.each { |day| @user.attendances.create!(worked_on: day) }
         one_month.each do |day|
-          @user.attendances.create!(worked_on: day)
+          attendance = @user.attendances.create!(worked_on: day)
+          attendance.history = History.new if attendance.history.nil?
         end
       end
       @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)

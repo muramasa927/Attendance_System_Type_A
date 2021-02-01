@@ -16,8 +16,8 @@ module AttendancesHelper
 
   #在社時間の計算を行います（翌日）
   def working_times_for_next(start, finish_time)
-    calc_time = finish_time.change(day: finish_time.day + 1)
-    format("%.2f", (((calc_time - start) / 60) / 60))
+    calc_time = start.change(year: start.year, month:start.month, day: start.day - 1)
+    format("%.2f", (((finish_time - calc_time) / 60) / 60))
   end
 
   def showing_overtime_user(user,superior)
@@ -37,4 +37,7 @@ module AttendancesHelper
     format("%.2f", (((finish_time.time - calc_time.time) / 60) /60))
   end
 
+  def display_before_time(attendance)
+    l(attendance.history.log_started_at_to_change_attendance.floor_to(15.minute), format: :hour)
+  end
 end

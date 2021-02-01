@@ -49,29 +49,29 @@
                           <td><%= apply_attendance.worked_on %></td>
                           <td><%= $days_of_the_week[apply_attendance.worked_on.wday] %></td>
                           <!-- 変更前出社時間（分） -->
-                          <td></td>
+                          <td><%= l(apply_attendance.history.log_started_at_to_change_attendance.floor_to(15.minute), format: :hour) if apply_attendance.history.log_started_at_to_change_attendance.present? %></td>
                           <!-- 変更前出社時間（秒） -->
-                          <td></td>
+                          <td><%= l(apply_attendance.history.log_started_at_to_change_attendance.floor_to(15.minute), format: :minute) if apply_attendance.history.log_started_at_to_change_attendance.present? %></td>
                           <!-- 変更前退社時間（分） -->
-                          <td></td>
+                          <td><%= l(apply_attendance.history.log_finished_at_to_change_attendance.floor_to(15.minute), format: :hour) if apply_attendance.history.log_finished_at_to_change_attendance.present? %></td>
                           <!-- 変更前退社時間（秒） -->
-                          <td></td>
+                          <td><%= l(apply_attendance.history.log_finished_at_to_change_attendance.floor_to(15.minute), format: :minute) if apply_attendance.history.log_finished_at_to_change_attendance.present? %></td>
                           <!-- 変更後出社時間（分） -->
-                          <td><%= l(apply_attendance.started_at.floor_to(15.minutes), format: :hour) if attendance.started_at.present? %></td>
+                          <td><%= l(apply_attendance.started_at.floor_to(15.minutes), format: :hour) if apply_attendance.started_at.present? %></td>
                           <!-- 変更後出社時間（秒） -->
-                          <td><%= l(apply_attendance.started_at.floor_to(15.minutes), format: :minute) if attendance.started_at.present? %></td>
+                          <td><%= l(apply_attendance.started_at.floor_to(15.minutes), format: :minute) if apply_attendance.started_at.present? %></td>
                           <!-- 変更後退社時間（分） -->
-                          <td><%= l(apply_attendance.finished_at_at.floor_to(15.minutes), format: :hour) if attendance.finished_at.present? %></td>
+                          <td><%= l(apply_attendance.finished_at.floor_to(15.minutes), format: :hour) if apply_attendance.finished_at.present? %></td>
                           <!-- 変更後退社時間（秒） -->
-                          <td><%= l(apply_attendance.finished_at_at.floor_to(15.minutes), format: :minute) if attendance.finished_at.present? %></td>
+                          <td><%= l(apply_attendance.finished_at.floor_to(15.minutes), format: :minute) if apply_attendance.finished_at.present? %></td>
                           <!-- 備考 -->
                           <td><% apply_attendance.note %></td>
-                          <!-- 指示者確認,selectbox -->
-                          <td></td>
-                          <!-- 変更, checkbox -->
-                          <td></td>
+                          <td><%= attendance.select :change_attendance_information,[["なし", 0],["申請中", 1], ["承認", 2], ["否認", 3]] %></td>
+                          <td><%= attendance.check_box :change_information_to_attendance, {}, true, false %></td>
                           <!-- 勤怠を確認 -->
-                          <td></td>
+                          <td><%= link_to "確認する", user_path(apply_user), class: "btn btn-success" %></td>
+                          <%= attendance.hidden_field :user_id, :value => apply_attendance.user_id %>
+                          <%# f.hidden_field :applying_change_attendances, :value => false %>
                         </tbody>
                       <% end %>
                     <% end %> 
