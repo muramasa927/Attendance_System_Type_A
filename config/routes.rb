@@ -14,7 +14,6 @@ Rails.application.routes.draw do
   get 'users/attendances_employee'
   get 'users/edit_time_info'
   patch 'users/update_time_info'
-  
   resources :companies, except: [:show, :edit, :new]
 
   resources :users do
@@ -24,6 +23,9 @@ Rails.application.routes.draw do
       patch 'update_basic_info'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
+      #ユーザーの勤怠表示
+      get 'attendances_log'
+      post 'attendances_log_update'
     end
     resources :attendances, only: :update 
     get 'attendances/:id/edit_overtime_application', 

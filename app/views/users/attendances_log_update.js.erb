@@ -1,0 +1,27 @@
+
+<% @attendances.each do |attendance| %>;
+	var table = document.getElementById('table-attendance-log');  //表のオブジェクトを取得
+	var row_num = table.rows.length;    //表の行数を取得
+	if (row_num>1) {
+			//表に二行以上あるとき末尾行を削除（見出し行は削除しない）
+			table.deleteRow(row_num - 1);   //末尾行を削除
+	}
+<% end %>
+
+<% @search_attendances.each do |search_attendance| %>;
+	var str = "";
+	str += "<tr>";
+	str += "<td><%= l(search_attendance.worked_on, format: :short) %></td>";
+	str += "<td><%= l(search_attendance.history.log_before_started_at, format: :time) if search_attendance.history.log_before_started_at.present? %></td>";
+	str += "<td><%= l(search_attendance.history.log_before_finished_at, format: :time) if search_attendance.history.log_before_finished_at.present? %></td>";
+	str += "<td><%= l(search_attendance.started_at, format: :time)%></td>";
+	str += "<td><%= l(search_attendance.finished_at, format: :time) %></td>";
+	str += "<td><%= attendances_log_superior(search_attendance) %></td>";
+	str += "<td><%= l(search_attendance.history.log_date_of_apploval, format: :long) %></td>";
+	str += "</tr>";
+	$('table tbody').append(str);
+<% end %>;
+
+
+
+

@@ -16,6 +16,15 @@ class Attendance < ApplicationRecord
   #残業申請で翌日にチェックが入っている場合、定時開始時間より遅い退勤時間を無効にする
   validate :finish_overtime_than_started_at_if_next_day
 
+
+  def self.search(search)
+    if search
+      where(['name LIKE ?', "%#{search}%"])
+    else
+      all
+    end
+  end
+  
   def finished_at_is_invalid_without_a_started_at
     errors.add(:started_at, "が必要です") if started_at.blank? && finished_at.present?
   end

@@ -1,0 +1,43 @@
+<% provide(:title, "勤怠ログ") %>
+<h1 class = "center">勤怠ログ</h1>
+<div>
+
+	<%# 検索機能拡張 %>
+	<%= form_with(url: attendances_log_update_user_path(@user), :remote => true) do |f| %>
+		<%= f.month_field :search_month, :id => "search_month"%>
+		<%= submit_tag 'Search' %>
+	<% end %>
+
+	<table class = "table table-bordered table-condensed table-hover" id = "table-attendance-log">
+		<thead>
+			<tr>
+				<th>日付</th>
+				<th>変更前出社時間</th>
+				<th>変更前退社時間</th>
+				<th>変更後出社時間</th>
+				<th>変更後退社時間</th>
+				<th>指示者</th>
+				<th>承認日</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @attendances.each do |attendance| %>
+					<tr>
+						<td id = "log_worked_on"><%= l(attendance.worked_on, format: :short) %></td>
+						<%# 変更前出社時間 %>
+						<td id = "log_before_started_at"><%= l(attendance.history.log_before_started_at, format: :time) if attendance.history.log_before_started_at.present? %></td>
+						<%# 変更前退社時間 %>
+						<td id = "log_before_finished_at"><%= l(attendance.history.log_before_finished_at, format: :time) if attendance.history.log_before_finished_at.present?%></td>
+						<%# 変更後出社時間 %>
+						<td id = "log_changed_started_at"><%= l(attendance.started_at, format: :time)%></td>
+						<%# 変更後退社時間 %>
+						<td id = "log_changed_finished_at"><%= l(attendance.finished_at, format: :time)%></td>
+						<%# 指示者 %>
+						<td id = "log_superior"><%=attendances_log_superior(attendance) %></td>
+						<%# 承認日 %>
+						<td id = "log_date_of_apploval"><%= l(attendance.history.log_date_of_apploval, format: :long) %></td>
+					</tr>
+			<% end %>
+		</tbody>
+	</table>
+</div>

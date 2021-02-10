@@ -22,6 +22,11 @@ module UsersHelper
     end
   end
 
+  #勤怠ログで表示する上司の名前を返す
+  def attendances_log_superior(attendance)
+    User.find(attendance.history.log_instruction_superior_id).name
+  end
+
   # 終了予定時間の表示を返す
   def display_finish_time(day)
     if day.finish_overtime.blank?
@@ -45,25 +50,28 @@ module UsersHelper
     end
   end
 
-    # 勤怠変更の申請状況の表示を返す
-    def display_change_attendance_information(day)
-      case day.change_attendance_information
-      when 0
-        str = ""
-      when 1
-        str = change_attendance_superior(day) + "へ勤怠変更申請中です"
-      when 2
-        str = change_attendance_superior(day) + "が勤怠変更を承認しました"
-      when 3
-        str = change_attendance_superior(day) + "が勤怠変更を否認しました"
-      end
+  # 勤怠変更の申請状況の表示を返す
+  def display_change_attendance_information(day)
+    case day.change_attendance_information
+    when 0
+      str = ""
+    when 1
+      str = change_attendance_superior(day) + "へ勤怠変更申請中です"
+    when 2
+      str = change_attendance_superior(day) + "が勤怠変更を承認しました"
+    when 3
+      str = change_attendance_superior(day) + "が勤怠変更を否認しました"
     end
+  end
+
+  def attendance_confirm?(user)
+    user == current_user 
+  end
+  
+  #def current_user?(user)
+  #  user == current_user
+  #end
 end
 
-def attendance_confirm?(user)
-  user == current_user 
-end
 
-#def current_user?(user)
-#  user == current_user
-#end
+

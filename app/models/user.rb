@@ -16,13 +16,6 @@ class User < ApplicationRecord
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
   
-  def self.search(search)
-    if search
-      where(['name LIKE ?', "%#{search}%"])
-    else
-      all
-    end
-  end
   #Model読み込み、DB登録
   def self.import(file)
     CSV.foreach(file.path, headers: true) do |row|

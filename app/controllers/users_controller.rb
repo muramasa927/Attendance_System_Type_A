@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :attendances_log, :attendances_log_update]
   before_action :not_access_to_admin, only: [:show, :edit]
   before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy,:edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:edit, :update]
@@ -76,7 +76,6 @@ class UsersController < ApplicationController
   end
 
   def edit_basic_info
-  
   end
   
   def update_basic_info
@@ -100,12 +99,21 @@ class UsersController < ApplicationController
     flash[:success] = "ユーザーの基本情報を更新しました"
     redirect_to users_url
   end
-  
+
+  def attendances_log
+    @attendances = @user.attendances.where(log_flag: true)
+  end
+
+  def attendances_log_update
+    @attendances = @user.attendances.where(log_flag: true)
+    str_search_first_day = params[:search_month] + "-1"
+    search_first_day = str_search_first_day.to_date
+    @search_attendances = @user.attendances.where(worked_on: search_first_day.in_time_zone.all_year).where(worked_on: search_first_day.in_time_zone.all_month).where(log_flag: true)
+  end
   # プライベート
   private
   
     def user_params
-      
       params.require(:user).permit(:name, :email, :affiliation, :password, :password_confirmation)
     end
     

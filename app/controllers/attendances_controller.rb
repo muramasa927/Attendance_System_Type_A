@@ -65,7 +65,7 @@ class AttendancesController < ApplicationController
 		@applying_change_attendances = Attendance.where(change_attendance_information: 1).where(receive_superior_id_to_change_attendance: @user.id)
 	end
 	#勤怠変更の承認用update_action
-	def update_change_attendance_confirmation
+	def update_change_attendance_confirmation	
 		@count = 0
 		ActiveRecord::Base.transaction do
 			change_attendance_confirmation_params.each do |id, item|
@@ -80,7 +80,8 @@ class AttendancesController < ApplicationController
 					add_history_to_change_attendance_confirmation
 					@attendance.receive_superior_id_to_change_attendance = nil
 					#変更がtrueかつ申請情報が[申請中以外]の時
-					@attendance.update_attributes!(item)  
+					@attendance.update_attributes!(item)
+					@attendance.log_flag = true
 					@attendance.change_information_to_attendance = false
 					@count += 1
 					@attendance.save
@@ -248,6 +249,8 @@ class AttendancesController < ApplicationController
 		@attendance.history.log_note = @attendance.note
 		@attendance.history.log_after_started_at = @attendance.started_at
 		@attendance.history.log_after_finished_at = @attendance.finished_at
+		@attendance.history.log_date_of_apploval = Date.current
+		@attendance.history.log_instruction_superior_id = @superior.id
 		@attendance.history.save
 	end
 
