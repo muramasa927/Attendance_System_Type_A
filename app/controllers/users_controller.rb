@@ -106,9 +106,11 @@ class UsersController < ApplicationController
 
   def attendances_log_update
     @attendances = @user.attendances.where(log_flag: true)
-    str_search_first_day = params[:search_month] + "-1"
-    search_first_day = str_search_first_day.to_date
-    @search_attendances = @user.attendances.where(worked_on: search_first_day.in_time_zone.all_year).where(worked_on: search_first_day.in_time_zone.all_month).where(log_flag: true)
+    unless params[:search_month].blank?
+      str_search_first_day = params[:search_month] + "-1"
+      search_first_day = str_search_first_day.to_date
+      @search_attendances = @user.attendances.where(worked_on: search_first_day.in_time_zone.all_year).where(worked_on: search_first_day.in_time_zone.all_month).where(log_flag: true)
+    end
   end
   # プライベート
   private

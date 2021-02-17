@@ -1,12 +1,13 @@
 <% provide(:title, "勤怠ログ") %>
 <h1 class = "center">勤怠ログ</h1>
 <div>
-
 	<%# 検索機能拡張 %>
-	<%= form_with(url: attendances_log_update_user_path(@user), :remote => true) do |f| %>
-		<%= f.month_field :search_month, :id => "search_month"%>
-		<%= submit_tag 'Search' %>
+	<%= form_with(url: attendances_log_update_user_path(@user), :namespace =>" search_form", :remote => true) do |f| %>
+		<%= link_to "リセット", attendances_log_user_path(@user), class: "btn btn-primary" %>
+		<%= f.month_field :search_month, :id => "search_month", :onchange => "search_button.click()"%>
+		<%= f.submit 'Search', :id => "search_button" %>
 	<% end %>
+
 
 	<table class = "table table-bordered table-condensed table-hover" id = "table-attendance-log">
 		<thead>
@@ -35,9 +36,12 @@
 						<%# 指示者 %>
 						<td id = "log_superior"><%=attendances_log_superior(attendance) %></td>
 						<%# 承認日 %>
-						<td id = "log_date_of_apploval"><%= l(attendance.history.log_date_of_apploval, format: :long) %></td>
+						<td id = "log_date_of_apploval"><%= l(attendance.history.log_date_of_apploval.to_date, formats: :long) %></td>
 					</tr>
 			<% end %>
 		</tbody>
 	</table>
 </div>
+
+
+
