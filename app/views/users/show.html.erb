@@ -139,26 +139,29 @@
     </tbody>
     
     <tfoot>
-      <!--rowspan:縦結合, colspan:横結合-->
-      <tr class = "table-foot-title">
-        <td colspan = "2">合計日数</td>
-        <td colspan = "2">総合勤務時間</td>
-        <td colspan = "2">累計在社時間</td>
-        <td colspan = "2"></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      
-      <tr>
-        <td colspan = "2"><%= @attendances.count %></td>
-        <td colspan = "2"><%= format_basic_info(@user.work_time).to_f * @worked_sum %></td>
-        <td colspan = "2"><%= format("%.2f", @total_working_times.to_f) %></td>
-      </tr>
+      <%= form_with(model: @user, local: true) do |f| %>
+        <!--rowspan:縦結合, colspan:横結合-->
+        <tr class = "table-foot-title">
+          <th colspan = "2">合計日数</th>
+          <th colspan = "2">総合勤務時間</th>
+          <th colspan = "2">累計在社時間</th>
+          <th colspan = "2"></th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <th></th>
+        </tr>
+        
+        <tr>
+          <td colspan = "2"><%= @attendances.count %></td>
+          <td colspan = "2"><%= format_basic_info(@user.work_time).to_f * @worked_sum %></td>
+          <td colspan = "2"><%= format("%.2f", @total_working_times.to_f) %></td>
+          <td><%= f.collection_select :approval_superior, @superiors, :id, :name, { :include_blank => true }, :required => true %>
+        </tr>
+      <% end %>
     </tfoot>
   </table>
 </div>
