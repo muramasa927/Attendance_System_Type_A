@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210218221231) do
+ActiveRecord::Schema.define(version: 20210223010301) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(version: 20210218221231) do
     t.boolean "attendance_flag", default: false
     t.boolean "applying_change_attendance", default: false
     t.integer "approval_superior"
+    t.datetime "apploval_month"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

@@ -20,10 +20,17 @@
 <%# 上司が各種申請を確認する %>
 <div class = "container">
   <% if @user.superior? %>
-    <p><%= link_to "【所属長承認申請のお知らせ】" %></p>
+    <p>
+      <% if @approval_superior.present? %>
+        <%= link_to "【所属長承認のお知らせ】", edit_approval_to_superior_user_path(@user), remote: true  %>
+        <span><%= "[#{@approval_superior.count}件のお知らせがあります]" %></span>
+      <% else %>
+        <div>【勤怠変更申請のお知らせ】</div>
+      <% end %>
+    </p>
     <p>
       <% if @change_attendances.present? %>
-        <%= link_to "【勤怠変更申請のお知らせ", user_attendances_edit_change_attendance_confirmation_path(@user), remote: true  %>
+        <%= link_to "【勤怠変更申請のお知らせ】", user_attendances_edit_change_attendance_confirmation_path(@user), remote: true  %>
         <span><%= "[#{@change_attendances.count}件のお知らせがあります]" %></span>
       <% else %>
         <div>【勤怠変更申請のお知らせ】</div>
@@ -137,31 +144,41 @@
         </tr>
       <% end %>
     </tbody>
-    
     <tfoot>
-      <%= form_with(model: @user, local: true) do |f| %>
-        <!--rowspan:縦結合, colspan:横結合-->
-        <tr class = "table-foot-title">
-          <th colspan = "2">合計日数</th>
-          <th colspan = "2">総合勤務時間</th>
-          <th colspan = "2">累計在社時間</th>
-          <th colspan = "2"></th>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <th></th>
-        </tr>
-        
-        <tr>
-          <td colspan = "2"><%= @attendances.count %></td>
-          <td colspan = "2"><%= format_basic_info(@user.work_time).to_f * @worked_sum %></td>
-          <td colspan = "2"><%= format("%.2f", @total_working_times.to_f) %></td>
-          <td><%= f.collection_select :approval_superior, @superiors, :id, :name, { :include_blank => true }, :required => true %>
-        </tr>
-      <% end %>
+      <!--rowspan:縦結合, colspan:横結合-->
+      <tr class = "table-foot-title">
+        <th colspan = "2">合計日数</th>
+        <th colspan = "2">総合勤務時間</th>
+        <th colspan = "2">累計在社時間</th>
+        <th colspan = "2"></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      
+      <tr>
+        <td colspan = "2"><%= @attendances.count %></td>
+        <td colspan = "2"><%= format_basic_info(@user.work_time).to_f * @worked_sum %></td>
+        <td colspan = "2"><%= format("%.2f", @total_working_times.to_f) %></td>
+        <td colspan = "2"></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+          <%= form_with(model: @user, url: update_approval_to_user_user_url(@user), local: true) do |f| %>
+            <%= @user.approval_superior.present? ? "所属長承認 済" : "所属長承認 未" %>
+            <p><%= f.collection_select :approval_superior, @superiors, :id, :name, { :include_blank => true }, :required => true %></p>
+            <p><%= f.submit "申請する" %></p>
+          <% end %>
+        </td>
+      </tr>
     </tfoot>
   </table>
 </div>
@@ -170,3 +187,4 @@
 <div id = "edit-overtime-application" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
 <div id = "edit-overtime-confirmation" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
 <div id = "edit-change-attendance-confirmation" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
+<div id = "edit-approval-to-superior" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>

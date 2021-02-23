@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :attendances_log, :attendances_log_update]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :attendances_log, :attendances_log_update, :update_approval_to_user, :edit_approval_to_superior]
   before_action :not_access_to_admin, only: [:show, :edit]
   before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy,:edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:edit, :update]
@@ -16,6 +16,7 @@ class UsersController < ApplicationController
     @worked_sum = @attendances.where.not(started_at: nil).count
     @apply_attendances = Attendance.where(application_information: 1).where(receive_superior_id: @user.id)
     @change_attendances = Attendance.where(change_attendance_information: 1).where(receive_superior_id_to_change_attendance: @user.id)
+    @approval_superior = User.where(approval_superior: @user.id)
     @superiors = User.where(superior: true)
 
   end
@@ -56,7 +57,23 @@ class UsersController < ApplicationController
       end
     end
   end
+
+  def update_approval_to_user
+    if @user.update_attributes(approval_superior_params)
+      flash[:success] = "１ヶ月の勤怠を所属長に申請しました"
+      redirect_to @user
+    else
+      render :show
+    end
+  end
   
+  def edit_approval_to_superior
+    @apply_users = User.where(approval_superior: @user.id )
+  end
+
+  def update_approval_to_superior
+
+  end
   def destroy
     @user.destroy
     flash[:success] = "#{@user.name}のデータを削除しました"
@@ -118,12 +135,16 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:name, :email, :affiliation, :password, :password_confirmation)
     end
+
+    def approval_superior_params
+      params.require(:user).permit(:approval_superior)
+    end
     
     def basic_info_params
       params.require(:user).permit(
                                     :name, :email, :affiliation, :employee_number,
                                     :uid,:basic_work_time, :designated_work_start_time,
-                                    :designated_work_end_time, :password, :password_confirmation
+                                    :designated_work_end_time, :password, :password_confirmation,
                                   )
     end
     
