@@ -10,7 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210224221449) do
+ActiveRecord::Schema.define(version: 20210307065831) do
+
+  create_table "approvals", force: :cascade do |t|
+    t.boolean "approve", default: false
+    t.boolean "apply", default: false
+    t.boolean "change", default: false
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "superior_id"
+    t.integer "information"
+    t.integer "log_superior_id"
+    t.integer "log_information"
+    t.index ["user_id"], name: "index_approvals_on_user_id"
+  end
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -75,8 +89,8 @@ ActiveRecord::Schema.define(version: 20210224221449) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "affiliation"
-    t.datetime "basic_work_time", default: "2021-02-02 23:00:00"
-    t.datetime "work_time", default: "2021-02-02 22:30:00"
+    t.datetime "basic_work_time", default: "2021-03-06 23:00:00"
+    t.datetime "work_time", default: "2021-03-06 22:30:00"
     t.boolean "superior", default: false
     t.boolean "applying_overtime", default: false
     t.datetime "designated_work_start_time"
@@ -85,10 +99,6 @@ ActiveRecord::Schema.define(version: 20210224221449) do
     t.text "uid"
     t.boolean "attendance_flag", default: false
     t.boolean "applying_change_attendance", default: false
-    t.integer "approval_superior"
-    t.datetime "apploval_month"
-    t.boolean "change_approval"
-    t.integer "approval_information"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
