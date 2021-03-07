@@ -24,10 +24,10 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
+                      <td><%= l(apply_user.apploval_month.to_date, format: :month) if apply_user.apploval_month.present? %></td>
+                      <td><%= f.select :approval_information, [["なし", 0],["申請中", 1], ["承認", 2], ["否認", 3]] %></td>
+                      <td><%= f.check_box :change_approval, {}, true, false %></td>
+                      <td><%= link_to "確認する", user_path(apply_user), class: "btn btn-success" %></td>
                     </tr>
                   </tbody>
                 </table>

@@ -59,7 +59,7 @@ class UsersController < ApplicationController
   end
 
   def update_approval_to_user
-    if @user.update_attributes(approval_superior_params)
+    if @user.update_attributes(approval_to_user_params)
       flash[:success] = "１ヶ月の勤怠を所属長に申請しました"
       redirect_to @user
     else
@@ -70,10 +70,37 @@ class UsersController < ApplicationController
   def edit_approval_to_superior
     @apply_users = User.where(approval_superior: @user.id )
   end
-
+#１ヶ月の勤怠承認の更新処理
   def update_approval_to_superior
-
+		@count = 0
+		ActiveRecord::Base.transaction do
+			approval_to_superior_params.each do |id, item|
+				user = User.find(params[:id])
+				if item[:change_approval] && item[:approval_information] != "1"
+					if item[:change_attendance_information] == "0"
+						return_approval
+						item[:change_attendance_information] = @attendance.history.log_change_attendance_information
+					end
+					#変更がtrueかつ申請情報が[申請中以外]の時
+					user.update_attributes!(item)
+					user.change_approval = false
+					@count += 1
+					user.save
+				end
+				if  !(user.attendances.where(approval_information: true).any?)
+					user.applying_change_attendance = false
+					user.save
+				end
+			end
+		end
+		flash[:success] = "#{@count}件の勤怠変更を更新しました"
+		redirect_to user_url(@superior)
+	# トランジェクションによるエラーの分岐です
+	rescue ActiveRecord::RecordInvalid
+		flash[:danger] = TRANSACTION_ERROR_MSG
+		redirect_to user_url(@superior)
   end
+
   def destroy
     @user.destroy
     flash[:success] = "#{@user.name}のデータを削除しました"
@@ -136,10 +163,13 @@ class UsersController < ApplicationController
       params.require(:user).permit(:name, :email, :affiliation, :password, :password_confirmation)
     end
 
-    def approval_superior_params
-      params.require(:user).permit(:approval_superior)
+    def approval_to_user_params
+      params.require(:user).permit(:approval_superior, :apploval_month)
     end
     
+    def approval_to_superior_params
+      params.require(:user).permit(:change_approval, :approval_information)
+    end
     def basic_info_params
       params.require(:user).permit(
                                     :name, :email, :affiliation, :employee_number,
