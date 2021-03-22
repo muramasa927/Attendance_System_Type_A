@@ -21,11 +21,11 @@
 <div class = "container">
   <% if @user.superior? %>
     <p>
-      <% if @approval_superior.present? %>
-        <%= link_to "【所属長承認のお知らせ】", edit_approval_to_superior_user_path(@user), remote: true  %>
-        <span><%= "[#{@approval_superior.count}件のお知らせがあります]" %></span>
+      <% if @approvals.present? %>
+        <%= link_to "【所属長承認のお知らせ】", user_approvals_edit_path(@user), remote: true %>
+        <span><%= "[#{@approvals.count}件のお知らせがあります]" %></span>
       <% else %>
-        <div>【勤怠変更申請のお知らせ】</div>
+        <div>【所属長承認のお知らせ】</div>
       <% end %>
     </p>
     <p>
@@ -172,10 +172,12 @@
         <td></td>
         <td></td>
         <td>
-          <%= form_with(model: @user, url: update_approval_to_user_user_url(@user), local: true) do |f| %>
-            <%= @user.approval_superior.present? ? "所属長承認 済" : "所属長承認 未" %></p>
-            <p><%= f.collection_select :approval_superior, @superiors, :id, :name, { :include_blank => true }, :required => true %>
-            <%= f.hidden_field :apploval_month, :value => @first_day %>
+          <%= form_with(model: @approval, url: user_approvals_update_apply_url(@user, @approval), local: true) do |f| %>
+            <%= @approval.approve == true ? "所属長承認 済" : "所属長承認 未" %></p>
+            <p><%= f.collection_select :superior_id, @superiors, :id, :name, { :include_blank => true }, :required => true %>
+            <%= f.hidden_field :month, :value => @first_day %>
+            <%= f.hidden_field :apply, :value => true %>
+            <%= f.hidden_field :information, :value => 1 %>
             <p><%= f.submit "申請する" %></p>
           <% end %>
         </td>
@@ -188,4 +190,4 @@
 <div id = "edit-overtime-application" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
 <div id = "edit-overtime-confirmation" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
 <div id = "edit-change-attendance-confirmation" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
-<div id = "edit-approval-to-superior" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
+<div id = "edit" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>

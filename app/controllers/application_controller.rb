@@ -70,10 +70,10 @@ class ApplicationController < ActionController::Base
     one_month = [*@first_day..@last_day]
     # ユーザーに紐づく１ヶ月分のレコードを検索し取得
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
-    # それぞれの件数（日数）が一致するか評価
     unless one_month.count == @attendances.count
       # トランザクション
       ActiveRecord::Base.transaction do
+        @approval = @user.approvals.create(month: @first_day)
         # １ヶ月分の勤怠データを生成
         # one_month.each { |day| @user.attendances.create!(worked_on: day) }
         one_month.each do |day|

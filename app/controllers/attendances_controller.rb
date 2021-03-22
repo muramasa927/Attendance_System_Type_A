@@ -65,7 +65,7 @@ class AttendancesController < ApplicationController
 		@applying_change_attendances = Attendance.where(change_attendance_information: 1).where(receive_superior_id_to_change_attendance: @user.id)
 	end
 	#勤怠変更の承認用update_action
-	def update_change_attendance_confirmation	
+	def update_change_attendance_confirmation
 		@count = 0
 		ActiveRecord::Base.transaction do
 			change_attendance_confirmation_params.each do |id, item|

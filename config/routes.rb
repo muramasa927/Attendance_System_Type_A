@@ -26,9 +26,6 @@ Rails.application.routes.draw do
       #ユーザーの勤怠表示
       get 'attendances_log'
       post 'attendances_log_update'
-      get 'edit_approval_to_superior'
-      patch 'update_approval_to_superior'
-      patch 'update_approval_to_user'
     end
     resources :attendances, only: :update 
     get 'attendances/:id/edit_overtime_application', 
@@ -37,6 +34,9 @@ Rails.application.routes.draw do
       to: 'attendances#update_overtime_application', as: :attendances_update_overtime_application
     get 'attendances/edit_overtime_confirmation'
     get 'attendances/edit_change_attendance_confirmation'
+    get 'approvals/edit', to: 'approvals#edit', as: :approvals_edit
+    patch 'approvals/update', to: 'approvals#update', as: :approvals_update
+    patch 'approvals/:id/update_apply', to: 'approvals#update_apply', as: :approvals_update_apply
   end
   patch 'attendances/update_change_attendance_confirmation'
   patch 'attendances/update_overtime_confirmation'
