@@ -12,7 +12,10 @@ class ApplicationController < ActionController::Base
   def set_user
     @user = User.find(params[:id])
   end
-
+  #ユーザーをparms[:user_id]で取得する
+  def set_user_for_user_id
+    @user = User.find(params[:user_id])
+  end
   #userがadminの時、indexページへリダイレクトする
   def not_access_to_admin
     redirect_to users_url if @user.admin? 

@@ -1,8 +1,11 @@
 class ApprovalsController < ApplicationController
+	before_action :set_user_for_user_id, only: [:edit]
+	before_action :logged_in_user, only: [:update, :update_apply, :edit]
 
 	def update_apply
 		@approval = Approval.find(params[:id])
 		@user = User.find(@approval.user_id)
+		correct_user
     if @approval.update_attributes(apply_params)
 			@user.apply = true
 			@user.save
@@ -14,7 +17,6 @@ class ApprovalsController < ApplicationController
   end
 
   def edit
-		@user = User.find(params[:user_id])
     @approvals = Approval.where(superior_id: params[:user_id] ).where(apply: true)
 		@apply_users = User.where(apply: true)
   end
@@ -26,6 +28,7 @@ class ApprovalsController < ApplicationController
 			approval_params.each do |id, item|
 				approval = Approval.find(id)
 				@superior = User.find(approval.superior_id)
+				user = User.find(approval.apply_id)
 				if item[:change] && item[:information] != "1"
 					if item[:information] == "0"
 						#変更がtrueで申請情報が[なし]の時
@@ -40,6 +43,10 @@ class ApprovalsController < ApplicationController
 					approval.save
 					@count += 1
 				end
+				if  !(user.approvals.where(apply: true).any?)
+					user.apply = false
+					user.save
+				end
 			end
 		end
 		flash[:success] = "#{@count}件の勤怠変更を更新しました"
@@ -52,11 +59,11 @@ class ApprovalsController < ApplicationController
 
 	private
 		def apply_params	
-			params.require(:approval).permit(:superior_id, :apply, :information, :month)
+			params.require(:approval).permit(:superior_id, :apply, :information, :month, :apply_id)
 		end
 
 		def approval_params
-			params.require(:user).permit(approvals:[:change, :information, :approve, :log_superior_id, :log_information])[:approvals]
+			params.require(:user).permit(approvals:[:change, :information, :approve, :log_superior_id, :log_information, :apply])[:approvals]
 		end
 
 end

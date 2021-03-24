@@ -172,14 +172,17 @@
         <td></td>
         <td></td>
         <td>
+        <% if @user == current_user %>
           <%= form_with(model: @approval, url: user_approvals_update_apply_url(@user, @approval), local: true) do |f| %>
-            <%= @approval.approve == true ? "所属長承認 済" : "所属長承認 未" %></p>
+            <%= reply_superior(@approval) %></p>
             <p><%= f.collection_select :superior_id, @superiors, :id, :name, { :include_blank => true }, :required => true %>
             <%= f.hidden_field :month, :value => @first_day %>
             <%= f.hidden_field :apply, :value => true %>
             <%= f.hidden_field :information, :value => 1 %>
+            <%= f.hidden_field :apply_id, :value => @user.id %>
             <p><%= f.submit "申請する" %></p>
           <% end %>
+        <% end %>
         </td>
       </tr>
     </tfoot>

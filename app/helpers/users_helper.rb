@@ -67,10 +67,19 @@ module UsersHelper
   def attendance_confirm?(user)
     user == current_user 
   end
-  
-  #def current_user?(user)
-  #  user == current_user
-  #end
+
+  def reply_superior(approval)
+    case approval.information
+    when nil
+      str = "所属長承認未"
+    when 1
+      str =  "所属長へ１ヶ月承認申請中です"
+    when 2
+      str = "所属長承認済"
+    when 3
+      str = "所属長が１ヶ月承認を否認しました"
+    end 
+	end
 end
 
 

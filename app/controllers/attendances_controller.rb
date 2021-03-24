@@ -1,6 +1,8 @@
 class AttendancesController < ApplicationController
 	
 	before_action :set_user, only: [:edit_one_month]
+	before_action :set_user_for_user_id, only: [:update, :edit_change_attendance_confirmation, :edit_overtime_application,
+																							:edit_overtime_confirmation]
 	before_action :logged_in_user, only: [:update, :edit_one_month]
 	before_action :set_one_month, only: [:edit_one_month]
 	
@@ -8,7 +10,6 @@ class AttendancesController < ApplicationController
 	TRANSACTION_ERROR_MSG = "無効な入力データがあった為、更新をキャンセルしました"
 	#出勤・退勤登録
 	def update
-		@user = User.find(params[:user_id])
 		@attendance = Attendance.find(params[:id])
 		# 出勤時間が未登録か確認
 		if @attendance.started_at.nil?
@@ -60,7 +61,6 @@ class AttendancesController < ApplicationController
 
 	#勤怠変更の承認用action(モーダル)
 	def edit_change_attendance_confirmation
-		@user = User.find(params[:user_id])
 		@change_attendance_users = User.where(applying_change_attendance: true)
 		@applying_change_attendances = Attendance.where(change_attendance_information: 1).where(receive_superior_id_to_change_attendance: @user.id)
 	end
@@ -102,7 +102,6 @@ class AttendancesController < ApplicationController
 	#残業の申請
 	#一般ユーザー→上長
 	def edit_overtime_application
-		@user = User.find(params[:user_id])
 		@attendance = Attendance.find(params[:id])
 		@superiors = User.where(superior: true).where.not(id: @user.id)
 	end
@@ -131,7 +130,6 @@ class AttendancesController < ApplicationController
 	#残業申請の承認
 	#上長→一般ユーザー
 	def edit_overtime_confirmation
-		@user = User.find(params[:user_id])
 		@overtime_users = User.where(applying_overtime: true)
 		@applying_attendances = Attendance.where(application_information: 1).where(receive_superior_id: @user.id)
 	end

@@ -25,15 +25,17 @@
                 <tbody>
                   <% @approvals.each do | approval | %>
                     <%= f.fields_for 'approvals[]', approval do |a| %>
-                      <tr>
-                        <td><%= l(approval.month.to_date, format: :month) if approval.month.present? %></td>
-                        <td><%= a.select :information, [["なし", 0],["申請中", 1], ["承認", 2], ["否認", 3]] %></td>
-                        <td><%= a.check_box :change, {}, true, false %></td>
-                        <%= a.hidden_field :approve, :value => true %>
-                        <%= a.hidden_field :log_superior_id, :value => @user.id %>
-                        <%= a.hidden_field :apply, :value => false%>
-                        <td><%= link_to "確認する", user_path(apply_user), class: "btn btn-success" %></td>
-                      </tr>
+                      <% if apply_user.id == approval.apply_id %>
+                        <tr>
+                          <td><%= l(approval.month.to_date, format: :month) if approval.month.present? %></td>
+                          <td><%= a.select :information, [["なし", 0],["申請中", 1], ["承認", 2], ["否認", 3]] %></td>
+                          <td><%= a.check_box :change, {}, true, false %></td>
+                          <%= a.hidden_field :approve, :value => true %>
+                          <%= a.hidden_field :log_superior_id, :value => @user.id %>
+                          <%= a.hidden_field :apply, :value => false%>
+                          <td><%= link_to "確認する", user_path(apply_user), class: "btn btn-success" %></td>
+                        </tr>
+                      <% end %>
                     <% end %>
                   <% end %>
                 </tbody>
