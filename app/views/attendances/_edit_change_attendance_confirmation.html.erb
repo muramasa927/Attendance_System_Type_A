@@ -68,7 +68,7 @@
                           <td><% apply_attendance.note %></td>
                           <td><%= attendance.select :change_attendance_information,[["なし", 0],["申請中", 1], ["承認", 2], ["否認", 3]] %></td>
                           <td><%= attendance.check_box :change_information_to_attendance, {}, true, false %></td>
-                          <!-- 勤怠を確認 -->
+                          <!-- 勤怠を確認よう動作確認 -->
                           <td><%= link_to "確認する", user_path(apply_user), class: "btn btn-success" %></td>
                           <% attendance.hidden_field :user_id, :value => apply_attendance.user_id %>
                         </tbody>

@@ -9,16 +9,23 @@ class UsersController < ApplicationController
   before_action :other_user, only: :show
   
   def index
-    @users = User.paginate(page: params[:page],per_page: 10).search(params[:search]).where(admin: false)
+    @users = User.paginate(page: params[:page],per_page: 10).where(admin: false)
   end
   
   def show
-    @worked_sum = @attendances.where.not(started_at: nil).count
-    @apply_attendances = Attendance.where(application_information: 1).where(receive_superior_id: @user.id)
-    @change_attendances = Attendance.where(change_attendance_information: 1).where(receive_superior_id_to_change_attendance: @user.id)
-    @approvals = Approval.where(superior_id: params[:id]).where(information: 1)
-    @approval = @user.approvals.find_by(month: @first_day)
-    @superiors = User.where(superior: true).where.not(id: @user.id)
+    respond_to do |format|
+      format.html do
+        @worked_sum = @attendances.where.not(started_at: nil).count
+        @apply_attendances = Attendance.where(application_information: 1).where(receive_superior_id: @user.id)
+        @change_attendances = Attendance.where(change_attendance_information: 1).where(receive_superior_id_to_change_attendance: @user.id)
+        @approvals = Approval.where(superior_id: params[:id]).where(information: 1)
+        @approval = @user.approvals.find_by(month: @first_day)
+        @superiors = User.where(superior: true).where.not(id: @user.id)
+      end
+      format.csv do |csv|
+        send_data render_to_string, filename: "#{@user.name}の#{l(@first_day, format: :month)}の勤怠情報.csv", type: :csv
+      end
+    end
   end
   
   def new

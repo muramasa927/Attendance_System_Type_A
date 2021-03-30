@@ -76,9 +76,11 @@
 .import-form-textbox {
   height: 35px;
 }
+.choose-file-button {
+}
 
-#import-btn {
-  margin: 15px;
+#import_btn {
+  margin-bottom: 10px;
 }
 #import_file_field {
   display: none;
@@ -86,4 +88,9 @@
 
 #search_button {
   display: none;
+}
+
+.output-csv {
+  margin-left: 100px;
+  margin-bottom: 10px;
 }

@@ -1,13 +1,15 @@
 class AttendancesController < ApplicationController
+	require 'csv'
 	
 	before_action :set_user, only: [:edit_one_month]
 	before_action :set_user_for_user_id, only: [:update, :edit_change_attendance_confirmation, :edit_overtime_application,
-																							:edit_overtime_confirmation]
+																							:edit_overtime_confirmation, :create_csv]
 	before_action :logged_in_user, only: [:update, :edit_one_month]
 	before_action :set_one_month, only: [:edit_one_month]
 	
 	UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
 	TRANSACTION_ERROR_MSG = "無効な入力データがあった為、更新をキャンセルしました"
+
 	#出勤・退勤登録
 	def update
 		@attendance = Attendance.find(params[:id])
@@ -263,5 +265,4 @@ class AttendancesController < ApplicationController
 		@attendance.note = @attendance.history.log_note
 		@attendance.save
 	end
-
 end

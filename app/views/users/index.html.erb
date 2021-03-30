@@ -6,7 +6,7 @@
 <%= form_with url: import_users_path, multipart: true do |f| %>
   <div class="input-group">
     <label class="input-group-btn">
-      <span class="btn btn-primary">
+      <span class="btn btn-default">
         ファイルを選択<%= f.file_field :file, id: "import_file_field" %>
       </span>
     </label>

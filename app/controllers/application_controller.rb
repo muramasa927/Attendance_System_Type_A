@@ -68,6 +68,7 @@ class ApplicationController < ActionController::Base
   def set_one_month
     @first_day = params[:date].nil? ?
     Date.current.beginning_of_month : params[:date].to_date
+    @attendance = @first_day
     @last_day = @first_day.end_of_month
     # 対象の月の日数を代入
     one_month = [*@first_day..@last_day]
