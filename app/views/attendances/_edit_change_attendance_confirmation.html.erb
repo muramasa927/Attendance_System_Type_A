@@ -12,6 +12,7 @@
           <h1>勤怠変更承認画面</h1>
           <%= form_with(model: @user, url: attendances_update_change_attendance_confirmation_path, local: true, method: :patch) do |f| %>
             <% @change_attendance_users.each do |apply_user| %>
+              <% if showing_attendances_user(apply_user, @user) %>
                 <div><%= apply_user.name %>の残業申請</div>
                 <table class = "table table-bordered table-sm table-hover">
                   <thead>
@@ -76,12 +77,10 @@
                     <% end %> 
                   <% end %>    
                 </table>
+              <% end %>
             <% end %>
             <div class = "center">
-              <%= f.submit "更新", class: "btn btn-primary" %>
-              <button type = "button" class = "btn btn-default" data-dismiss = "modal">
-                キャンセル
-              </button>
+              <%= f.submit "変更を送信する", class: "btn btn-primary" %>
             </div>
           <% end %>
         </div>
@@ -89,3 +88,4 @@
     </div>
   </div>
 </div> 
+

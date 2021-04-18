@@ -15,7 +15,7 @@ class ApprovalsController < ApplicationController
       render :show
     end
   end
-
+	#確認
   def edit
     @approvals = Approval.where(superior_id: params[:user_id] ).where(apply: true)
 		@apply_users = User.where(apply: true)

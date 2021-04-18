@@ -23,6 +23,10 @@ module AttendancesHelper
   def showing_overtime_user(user,superior)
     user.attendances.where(receive_superior_id: superior).any? ? true : false
   end
+
+  def showing_attendances_user(user,superior)
+    user.attendances.where(receive_superior_id_to_change_attendance: superior).any? ? true : false
+  end
   #勤怠編集の翌日チェック時の処理
 
   # 時間外時間を計算します(当日)

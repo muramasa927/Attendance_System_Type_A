@@ -30,9 +30,9 @@
 						<%# 変更前退社時間 %>
 						<td id = "log_before_finished_at"><%= l(attendance.history.log_before_finished_at, format: :time) if attendance.history.log_before_finished_at.present?%></td>
 						<%# 変更後出社時間 %>
-						<td id = "log_changed_started_at"><%= l(attendance.started_at, format: :time)%></td>
+						<td id = "log_changed_started_at"><%= l(attendance.started_at, format: :time) if attendance.started_at.present?%></td>
 						<%# 変更後退社時間 %>
-						<td id = "log_changed_finished_at"><%= l(attendance.finished_at, format: :time)%></td>
+						<td id = "log_changed_finished_at"><%= l(attendance.finished_at, format: :time) if attendance.finished_at.present?%></td>
 						<%# 指示者 %>
 						<td id = "log_superior"><%=attendances_log_superior(attendance) %></td>
 						<%# 承認日 %>

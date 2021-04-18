@@ -62,6 +62,7 @@ class AttendancesController < ApplicationController
 	end
 
 	#勤怠変更の承認用action(モーダル)
+	#確認
 	def edit_change_attendance_confirmation
 		@change_attendance_users = User.where(applying_change_attendance: true)
 		@applying_change_attendances = Attendance.where(change_attendance_information: 1).where(receive_superior_id_to_change_attendance: @user.id)
