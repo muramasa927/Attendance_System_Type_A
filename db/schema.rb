@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210322204500) do
+ActiveRecord::Schema.define(version: 20210424061027) do
 
   create_table "approvals", force: :cascade do |t|
     t.boolean "approve", default: false
@@ -42,12 +42,12 @@ ActiveRecord::Schema.define(version: 20210322204500) do
     t.datetime "finish_overtime"
     t.boolean "next_day"
     t.text "business_processing_content"
-    t.boolean "change_information", default: false
     t.integer "change_attendance_information", default: 0
     t.integer "receive_superior_id_to_change_attendance"
     t.integer "apply_user_id_to_change_attendance"
     t.boolean "change_information_to_attendance"
     t.boolean "log_flag", default: false
+    t.boolean "change_information"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -91,8 +91,8 @@ ActiveRecord::Schema.define(version: 20210322204500) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "affiliation"
-    t.datetime "basic_work_time", default: "2021-04-17 23:00:00"
-    t.datetime "work_time", default: "2021-04-17 22:30:00"
+    t.datetime "basic_work_time", default: "2021-04-23 23:00:00"
+    t.datetime "work_time", default: "2021-04-23 22:30:00"
     t.boolean "superior", default: false
     t.boolean "applying_overtime", default: false
     t.datetime "designated_work_start_time"
