@@ -44,12 +44,16 @@ class AttendancesController < ApplicationController
 			@count = 0
 			attendances_params.each do |id, item|
 				attendance = Attendance.find(id)
-			unless item[:receive_superior_id_to_change_attendance].blank?
+				unless item[:receive_superior_id_to_change_attendance].blank?
 					attendance.update_attributes!(item)
 					user = User.find(item[:apply_user_id_to_change_attendance])
 					user.applying_change_attendance = true
 					@count += 1
 					user.save
+					if item[:next_day]=true
+						attendance.finished_at = attendance.finished_at.change(year: attendance.finished_at.year, month: attendance.finished_at.month, day: attendance.finished_at.day + 1)			
+						attendance.save	
+					end
 				end
 			end
 		end
