@@ -124,6 +124,7 @@ class AttendancesController < ApplicationController
 			@attendance = Attendance.find(params[:id])
 			apply_overtime_user.applying_overtime = true
 			@attendance.update_attributes!(overtime_application_params)
+			debugger
 			if params[:user][:attendance][:next_day]
 				@attendance.finish_overtime = @attendance.finish_overtime.change(day: params[:user][:attendance]["finish_overtime(3i)"].to_i + 1) 
 				@attendance.save

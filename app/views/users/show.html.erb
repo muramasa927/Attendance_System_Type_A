@@ -127,9 +127,11 @@
           <!-- 在社時間確認する -->
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
-              <%= str_times = working_times(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
+              <%= str_times = day.next_day? ? working_times_for_next(day.started_at, day.finished_at) : working_times(day.started_at, day.finished_at) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
+
+            
           </td>
           <td><%= day.note %></td>
           <td><%= l(display_finish_time(day), format: :hour) if day.started_at.present? && day.finished_at.blank? %></td>          

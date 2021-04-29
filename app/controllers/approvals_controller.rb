@@ -17,8 +17,8 @@ class ApprovalsController < ApplicationController
   end
 	#確認
   def edit
-    @approvals = Approval.where(superior_id: params[:user_id] ).where(apply: true)
-		@apply_users = User.where(apply: true)
+    @approvals = Approval.where(superior_id: params[:user_id] ).where(apply: true).order(month: "ASC")
+		@apply_users = User.where(apply: true).order(id: "ASC")
   end
 
 #１ヶ月の勤怠承認の更新処理

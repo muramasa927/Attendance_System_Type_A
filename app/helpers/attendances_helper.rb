@@ -8,17 +8,6 @@ module AttendancesHelper
     # 上記に当てはまらなければfalseを返す
     false
   end
-  
-  #在社時間の計算を行います（当日）
-  def working_times(start, finish_time)
-    format("%.2f", (((finish_time - start) / 60) / 60))
-  end
-
-  #在社時間の計算を行います（翌日）
-  def working_times_for_next(start, finish_time)
-    calc_time = start.change(year: start.year, month:start.month, day: start.day - 1)
-    format("%.2f", (((finish_time - calc_time) / 60) / 60))
-  end
 
   def showing_overtime_user(user,superior)
     user.attendances.where(receive_superior_id: superior).any? ? true : false

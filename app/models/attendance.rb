@@ -13,8 +13,6 @@ class Attendance < ApplicationRecord
   validate :started_at_than_finished_at_fans_if_invalid
   #出勤日当日以外は出勤・退勤時間の両方が入っていないと無効
   validate :not_today_worked_on_started_at_and_finished_at_precence_invalid
-  #残業申請で翌日にチェックが入っている場合、定時開始時間より遅い退勤時間を無効にする
-  validate :finish_overtime_than_started_at_if_next_day
 
 
   def self.search(search)
@@ -40,17 +38,6 @@ class Attendance < ApplicationRecord
   def not_today_worked_on_started_at_and_finished_at_precence_invalid
     unless worked_on == Date.current
       errors.add(:started_at, "と退勤時間両方必要です") if started_at.present? ^ finished_at.present?
-    end
-  end
-
-  def finish_overtime_than_started_at_if_next_day
-    if started_at.present? && finish_overtime.present?
-      if next_day
-        errors.add(:started_at, "より遅い残業時間は無効です") if started_at < finish_overtime
-      else
-        errors.add(:started_at, "より早い残業時間は無効です") if started_at > finish_overtime
-      end
-      
     end
   end
   
