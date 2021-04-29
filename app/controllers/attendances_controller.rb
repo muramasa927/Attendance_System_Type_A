@@ -50,15 +50,18 @@ class AttendancesController < ApplicationController
 					user.applying_change_attendance = true
 					@count += 1
 					user.save
-					if item[:next_day]=true
-						attendance.finished_at = attendance.finished_at.change(year: attendance.finished_at.year, month: attendance.finished_at.month, day: attendance.finished_at.day + 1)			
-						attendance.save	
+					attendance.started_at = attendance.started_at.change(year: attendance.worked_on.year, month: attendance.worked_on.month, day: attendance.worked_on.day) if attendance.started_at.present?
+					if item[:next_day] == true
+						attendance.finished_at = attendance.finished_at.change(year: attendance.worked_on.year, month: attendance.worked_on.month, day: attendance.worked_on.day + 1) if attendance.finished_at.present?
+					else
+						attendance.finished_at = attendance.finished_at.change(year: attendance.worked_on.year, month: attendance.worked_on.month, day: attendance.worked_on.day) if attendance.finished_at.present?
 					end
+					attendance.save	
+					flash[:success] ="#{@count}件の勤怠情報を申請しました。"
 				end
 			end
 		end
-		flash[:success] ="#{@count}件の勤怠情報を申請しました。"
-		redirect_to user_url(date: params[:date])
+		redirect_to user_url(date: params[:date]) 
 	# トランジェクションによるエラーの分岐です
 	rescue ActiveRecord::RecordInvalid
 		flash[:danger] = TRANSACTION_ERROR_MSG
@@ -120,18 +123,18 @@ class AttendancesController < ApplicationController
 			apply_overtime_user = User.find(params[:user_id])
 			@attendance = Attendance.find(params[:id])
 			apply_overtime_user.applying_overtime = true
-			@attendance.update_attributes(overtime_application_params)
+			@attendance.update_attributes!(overtime_application_params)
 			if params[:user][:attendance][:next_day]
 				@attendance.finish_overtime = @attendance.finish_overtime.change(day: params[:user][:attendance]["finish_overtime(3i)"].to_i + 1) 
+				@attendance.save
 			end
-			@attendance.save
-			apply_overtime_user.update_attributes(apply_overtime_user_params)
-			flash[:success] = "ユーザーの基本情報を更新しました"
+			apply_overtime_user.update_attributes!(apply_overtime_user_params)
+			flash[:success] = "残業を申請しました"
 			redirect_to(current_user)
 		end
 	rescue ActiveRecord::RecordInvalid
 		flash[:danger] = TRANSACTION_ERROR_MSG
-		redirect_to user_url(@superior) 
+		redirect_to user_url(current_user) 
 	end
 
 	#残業申請の承認

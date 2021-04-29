@@ -49,7 +49,7 @@ class UsersController < ApplicationController
   
   def update
     if current_user.admin?
-      if @user.update_attributes(basic_info_params)
+      if @user.update_attributes!(basic_info_params)
         flash[:success] = "#{@user.name}のユーザー情報を更新しました"
         redirect_to users_url
       else

@@ -144,7 +144,9 @@
           </td>
           <td><%= day.business_processing_content %></td>
           <td>
+          <% unless day.application_information == 0 %>
             <%= display_application_information(day) %><br>
+          <% end %>
             <%= display_change_attendance_information(day) %>
           </td>
         </tr>

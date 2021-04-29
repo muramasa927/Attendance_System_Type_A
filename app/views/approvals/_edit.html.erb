@@ -34,7 +34,7 @@
                             <%= a.hidden_field :approve, :value => true %>
                             <%= a.hidden_field :log_superior_id, :value => @user.id %>
                             <%= a.hidden_field :apply, :value => false%>
-                            <td><%= link_to "確認する", user_path(apply_user), class: "btn btn-success" %></td>
+                            <td><%= link_to "確認する", user_path(apply_user, date: approval.month), class: "btn btn-success" %></td>
                           </tr>
                         <% end %>
                       <% end %>

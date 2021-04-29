@@ -10,19 +10,19 @@
 		}
 	<% end %>
 	
-	<% @attendances.each do |attendance| %>;
+	<% @attendances.each do |attendance| %>
 		var str = "";
 		str += "<tr>"";
 		str += "<td><%= l(attendance.worked_on, format: :short) %></td>"	;
 		str += "<td><%= l(attendance.history.log_before_started_at, format: :time) if attendance.history.log_before_started_at.present? %></td>";
 		str += "<td><%= l(attendance.history.log_before_finished_at, format: :time) if attendance.history.log_before_finished_at.present?%></td>"	;
-		str += "<td><%= l(attendance.started_at, format: :time)%></td>";
-		str += "	<td><%= l(attendance.finished_at, format: :time)%></td>";
+		str += "<td><%= l(attendance.started_at, format: :time) if attendance.started_at.present?%></td>";
+		str += "	<td><%= l(attendance.finished_at, format: :time)if attendance.finished_at.present?%></td>";
 		str += 	"<td><%=attendances_log_superior(attendance) %></td>";
 		str += 	"<td><%= l(attendance.history.log_date_of_apploval, format: :long) %></td>";
 		str += "</tr>"";
 		$('table tbody').append(str);
-	<% end %>;
+	<% end %>
 	
 <% else %>
 	<% @attendances.each do |attendance| %>;
@@ -40,13 +40,13 @@
 		str += "<td><%= l(search_attendance.worked_on, format: :short) %></td>";
 		str += "<td><%= l(search_attendance.history.log_before_started_at, format: :time) if search_attendance.history.log_before_started_at.present? %></td>";
 		str += "<td><%= l(search_attendance.history.log_before_finished_at, format: :time) if search_attendance.history.log_before_finished_at.present? %></td>";
-		str += "<td><%= l(search_attendance.started_at, format: :time)%></td>";
-		str += "<td><%= l(search_attendance.finished_at, format: :time) %></td>";
+		str += "<td><%= l(search_attendance.started_at, format: :time)if search_attendance.started_at.present?%></td>";
+		str += "<td><%= l(search_attendance.finished_at, format: :time) if search_attendance.finished_at.present?%></td>";
 		str += "<td><%= attendances_log_superior(search_attendance) %></td>";
 		str += "<td><%= l(search_attendance.history.log_date_of_apploval, format: :long) %></td>";
 		str += "</tr>";
 		$('table tbody').append(str);
-	<% end %>;
+	<% end %>
 <% end %>
 
 

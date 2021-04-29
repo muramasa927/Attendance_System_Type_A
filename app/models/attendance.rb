@@ -46,9 +46,9 @@ class Attendance < ApplicationRecord
   def finish_overtime_than_started_at_if_next_day
     if started_at.present? && finish_overtime.present?
       if next_day
-        errors.add(:started_at, "より遅い退勤時間は無効です") if started_at < finish_overtime
+        errors.add(:started_at, "より遅い残業時間は無効です") if started_at < finish_overtime
       else
-        errors.add(:started_at, "より早い退勤時間は無効です") if started_at > finish_overtime
+        errors.add(:started_at, "より早い残業時間は無効です") if started_at > finish_overtime
       end
       
     end
