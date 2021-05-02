@@ -71,8 +71,8 @@ class AttendancesController < ApplicationController
 	#勤怠変更の承認用action(モーダル)
 	#確認
 	def edit_change_attendance_confirmation
-		@change_attendance_users = User.where(applying_change_attendance: true)
-		@applying_change_attendances = Attendance.where(change_attendance_information: 1).where(receive_superior_id_to_change_attendance: @user.id)
+		@change_attendance_users = User.where(applying_change_attendance: true).order(id: "ASC")
+		@applying_change_attendances = Attendance.where(change_attendance_information: 1).where(receive_superior_id_to_change_attendance: @user.id).order(worked_on: "ASC")
 	end
 	#勤怠変更の承認用update_action
 	def update_change_attendance_confirmation
@@ -101,9 +101,9 @@ class AttendancesController < ApplicationController
 					user.save
 				end
 			end
+			flash[:success] = "#{@count}件の勤怠変更を更新しました"
+			redirect_to user_url(@superior)
 		end
-		flash[:success] = "#{@count}件の勤怠変更を更新しました"
-		redirect_to user_url(@superior)
 	# トランジェクションによるエラーの分岐です
 	rescue ActiveRecord::RecordInvalid
 		flash[:danger] = TRANSACTION_ERROR_MSG
@@ -140,8 +140,8 @@ class AttendancesController < ApplicationController
 	#残業申請の承認
 	#上長→一般ユーザー
 	def edit_overtime_confirmation
-		@overtime_users = User.where(applying_overtime: true)
-		@applying_attendances = Attendance.where(application_information: 1).where(receive_superior_id: @user.id)
+		@overtime_users = User.where(applying_overtime: true).order(id: "ASC")
+		@applying_attendances = Attendance.where(application_information: 1).where(receive_superior_id: @user.id).order(worked_on: "ASC")
 	end
 
 	#残業申請の承認
@@ -160,15 +160,15 @@ class AttendancesController < ApplicationController
 					#変更がtrueかつ申請情報が[申請中以外]の時
 					@attendance.update_attributes!(item)  
 					add_history_to_overtime_confirmation
+					flash[:success] = "残業申請を更新しました"
 				end
 				if  !(user.attendances.where(application_information: true).any?)
 					user.applying_overtime = false
 					user.update_attributes!(apply_overtime_user_params)
 				end
 			end
+			redirect_to user_url(@superior)
 		end
-		flash[:success] = "残業申請を更新しました"
-		redirect_to user_url(@superior)
 	# トランジェクションによるエラーの分岐です
 	rescue ActiveRecord::RecordInvalid
 		flash[:danger] = TRANSACTION_ERROR_MSG
