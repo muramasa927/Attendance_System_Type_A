@@ -109,7 +109,7 @@ class UsersController < ApplicationController
   end
 
   def attendances_log
-    @attendances = @user.attendances.where(log_flag: true)
+    @attendances = @user.attendances.where(log_flag: true).order(worked_on: "ASC")
   end
 
   def attendances_log_update

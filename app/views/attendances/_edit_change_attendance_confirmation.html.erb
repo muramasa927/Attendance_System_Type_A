@@ -2,7 +2,7 @@
   <div class = "modal-content">
     <div class = "modal-header">
       <button type = "button" class = "close" data-dismiss = "modal" aria-label = "Close">
-        <span aria-hidden = "true">&times;</span>
+        <span aria-hidden = "true"><%= link_to "✖️",user_path(current_user) %></span>
       </button>
     </div>
     
@@ -13,7 +13,7 @@
           <%= form_with(model: @user, url: attendances_update_change_attendance_confirmation_path, local: true, method: :patch) do |f| %>
             <% @change_attendance_users.each do |apply_user| %>
               <% if showing_attendances_user(apply_user, @user) %>
-                <div><%= apply_user.name %>の残業申請</div>
+                <div><%= apply_user.name %>の勤怠変更申請</div>
                 <table class = "table table-bordered table-sm table-hover">
                   <thead>
                     <tr>

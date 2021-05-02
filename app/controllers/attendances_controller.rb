@@ -51,16 +51,16 @@ class AttendancesController < ApplicationController
 					@count += 1
 					user.save
 					attendance.started_at = attendance.started_at.change(year: attendance.worked_on.year, month: attendance.worked_on.month, day: attendance.worked_on.day) if attendance.started_at.present?
-					if item[:next_day] == true
+					if item[:next_day]
 						attendance.finished_at = attendance.finished_at.change(year: attendance.worked_on.year, month: attendance.worked_on.month, day: attendance.worked_on.day + 1) if attendance.finished_at.present?
 					else
 						attendance.finished_at = attendance.finished_at.change(year: attendance.worked_on.year, month: attendance.worked_on.month, day: attendance.worked_on.day) if attendance.finished_at.present?
 					end
-					attendance.save	
-					flash[:success] ="#{@count}件の勤怠情報を申請しました。"
+					attendance.save
 				end
 			end
 		end
+		flash[:success] ="#{@count}件の勤怠情報を申請しました。"
 		redirect_to user_url(date: params[:date]) 
 	# トランジェクションによるエラーの分岐です
 	rescue ActiveRecord::RecordInvalid
@@ -124,7 +124,6 @@ class AttendancesController < ApplicationController
 			@attendance = Attendance.find(params[:id])
 			apply_overtime_user.applying_overtime = true
 			@attendance.update_attributes!(overtime_application_params)
-			debugger
 			if params[:user][:attendance][:next_day]
 				@attendance.finish_overtime = @attendance.finish_overtime.change(day: params[:user][:attendance]["finish_overtime(3i)"].to_i + 1) 
 				@attendance.save

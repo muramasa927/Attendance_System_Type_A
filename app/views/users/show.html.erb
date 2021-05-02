@@ -21,35 +21,35 @@
 </div>
 
 <%# 上司が各種申請を確認する %>
-<div class = "container">
-  <% if @user.superior? %>
-    <p>
-      <% if @approvals.present? %>
-        <%= link_to "【所属長承認のお知らせ】", user_approvals_edit_path(@user), remote: true, class: "color-red" %>
-        <span class= "color-red"><%= "[#{@approvals.count}件のお知らせがあります]" %></span>
-      <% else %>
-        <div>【所属長承認のお知らせ】</div>
-      <% end %>
-    </p>
-    <p>
-      <% if @change_attendances.present? %>
-        <%= link_to "【勤怠変更申請のお知らせ】", user_attendances_edit_change_attendance_confirmation_path(@user), remote: true, class: "color-red" %>
-        <span class= "color-red"><%= "[#{@change_attendances.count}件のお知らせがあります]" %></span>
-      <% else %>
-        <div>【勤怠変更申請のお知らせ】</div>
-      <% end %>
-    </p>
-    <p>
-      <% if @apply_attendances.present? %>
-        <%= link_to "【残業申請のお知らせ】", user_attendances_edit_overtime_confirmation_path(@user), remote: true, class: "color-red" %>
-        <span class= "color-red"><%= "[#{@apply_attendances.count}件のお知らせがあります]" %></span>
-      <% else %>
-        <div>【残業申請のお知らせ】</div>
-      <% end %>
-    </p>
-  <% end %>
-</div>
 <% if @user == current_user %>
+  <div class = "container">
+    <% if @user.superior? %>
+      <p>
+        <% if @approvals.present? %>
+          <%= link_to "【所属長承認のお知らせ】", user_approvals_edit_path(@user), remote: true, class: "color-red" %>
+          <span class= "color-red"><%= "[#{@approvals.count}件のお知らせがあります]" %></span>
+        <% else %>
+          <div>【所属長承認のお知らせ】</div>
+        <% end %>
+      </p>
+      <p>
+        <% if @change_attendances.present? %>
+          <%= link_to "【勤怠変更申請のお知らせ】", user_attendances_edit_change_attendance_confirmation_path(@user), remote: true, class: "color-red" %>
+          <span class= "color-red"><%= "[#{@change_attendances.count}件のお知らせがあります]" %></span>
+        <% else %>
+          <div>【勤怠変更申請のお知らせ】</div>
+        <% end %>
+      </p>
+      <p>
+        <% if @apply_attendances.present? %>
+          <%= link_to "【残業申請のお知らせ】", user_attendances_edit_overtime_confirmation_path(@user), remote: true, class: "color-red" %>
+          <span class= "color-red"><%= "[#{@apply_attendances.count}件のお知らせがあります]" %></span>
+        <% else %>
+          <div>【残業申請のお知らせ】</div>
+        <% end %>
+      </p>
+    <% end %>
+  </div>
   <div class = "btn-users-show">
     <%= link_to "csvで出力する", user_path(date: @attendance, format: :csv), class: "btn btn-primary col-md-2 output-csv" %>
     <%= link_to "勤怠修正ログ", attendances_log_user_path(@user), class: "btn btn-primary col-md-2" %><br><br>
@@ -127,11 +127,9 @@
           <!-- 在社時間確認する -->
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
-              <%= str_times = day.next_day? ? working_times_for_next(day.started_at, day.finished_at) : working_times(day.started_at, day.finished_at) %>
+              <%= str_times = working_times(day.started_at, day.finished_at) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
-
-            
           </td>
           <td><%= day.note %></td>
           <td><%= l(display_finish_time(day), format: :hour) if day.started_at.present? && day.finished_at.blank? %></td>          
@@ -198,20 +196,6 @@
     </tfoot>
   </table>
 </div>
-
-<script>
-  $(function(){
-  if @user != current_user
-    history.pushState(null, null, null); //ブラウザバック無効化
-    //ブラウザバックボタン押下時
-    $(window).on("popstate", function (event) {
-      history.pushState(null, null, null);
-      window.alert('前のページに戻る場合、前に戻るボタンから戻ってください。');
-    });
-  end
-  });
-</script>
-
 <%# モーダルウインドウ表示 %>
 <div id = "edit-overtime-application" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
 <div id = "edit-overtime-confirmation" class = "modal fade" tabindex = "-1" role = "dialog" aria-hidden = "true"></div>
