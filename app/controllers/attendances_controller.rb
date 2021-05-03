@@ -59,9 +59,15 @@ class AttendancesController < ApplicationController
 					attendance.save
 				end
 			end
+			if @count == 0
+				flash[:danger] ="勤怠情報を申請しませんでした"
+			else
+				flash[:success] ="#{@count}件の勤怠情報を申請しました。"
+			end
+			
+			redirect_to user_url(date: params[:date]) 
 		end
-		flash[:success] ="#{@count}件の勤怠情報を申請しました。"
-		redirect_to user_url(date: params[:date]) 
+
 	# トランジェクションによるエラーの分岐です
 	rescue ActiveRecord::RecordInvalid
 		flash[:danger] = TRANSACTION_ERROR_MSG
@@ -96,12 +102,16 @@ class AttendancesController < ApplicationController
 					@count += 1
 					@attendance.save
 				end
-				if  !(user.attendances.where(change_attendance_information: true).any?)
+				if !(user.attendances.where(change_attendance_information: true).any?)
 					user.applying_change_attendance = false
 					user.save
 				end
 			end
-			flash[:success] = "#{@count}件の勤怠変更を更新しました"
+			if @count == 0
+				flash[:danger] = "勤怠変更の承認を行いませんでした"
+			else
+				flash[:success] = "#{@count}件の勤怠変更を更新しました"
+			end
 			redirect_to user_url(@superior)
 		end
 	# トランジェクションによるエラーの分岐です
